@@ -1,0 +1,19 @@
+.button-container {
+    display: flex;
+  }
+  
+  .square-button {
+    width: 100px;
+    height: 100px;
+    margin: 5px;
+    border: 2px solid #3498db;
+    background-color: #3498db;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .square-button:hover {
+    background-color: #2980b9;
+  }
