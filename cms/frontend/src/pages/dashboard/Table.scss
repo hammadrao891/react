@@ -5,13 +5,23 @@
     color: #2d2727;
 }
 
+.tableFee {
+    width: 100%;
+    border-collapse: collapse;
+    color: #2d2727;
+}
 .table th,
 .table td {
     border: 1px solid #878686;
     padding: 8px;
     text-align: left;
 }
-
+.tableFee th,
+.tableFee td {
+    border: 1px solid #0d0c0c;
+    padding: 8px;
+    text-align: left;
+}
 .table th {
     background-color: #a8a7a7;
 }
@@ -40,6 +50,42 @@
     transition: background-color 0.3s ease;
   }
   
+
   .square-button:hover {
+    background-color: #2980b9;
+  }
+
+  
+  .square-buttonFee {
+    width: 100px;
+    height: 120px;
+    margin: 5px;
+    border: 2px solid #3498db;
+    background-color: #3498db;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  
+  .square-buttonFee:hover {
+    background-color: #2980b9;
+  }
+   
+  .square-buttonExp {
+    width: 120px;
+    height: 120px;
+    margin: 5px;
+    border: 2px solid #3498db;
+    background-color: #3498db;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  
+  .square-buttonExp:hover {
     background-color: #2980b9;
   }

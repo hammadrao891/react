@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three Tables Example</title>
+    <style>
+        table {
+           
+    width: 45%;
+    border-collapse: collapse;
+    font-size: 8px;
+    color: #2d2727;
+    font-family: "Verdana, sans-serif";
+        }
+
+      th,td{
+        border: 1px solid #000000;
+    /* padding: 8px; */
+    text-align: left;
+    padding-left: 1em;
+    width: 50%;
+
+      }  
+        h4{
+            font-size: 10px;
+            /* font-family:"Lucida Console" */
+            font-family: monospace;
+        }
+        hr
+        {
+            color: #000000;
+        }
+    </style>
+</head>
+<body>
+    <div style="display:flex;justify-content: center;">
+    <div style="width: 80%;">
+        <h4 style="text-align: center;font-size: 10px;">Air Foundation School System<br/>
+            Ashraf Town Chakwal ph: 0543-552497,552499<br/>
+           Student Copy</h4>
+    <div style="height: 30px;background-color: #000000;display: flex;justify-content: space-between;">
+    <h4  style="margin-right: 13em;">STUDENT INFORMATION</h4>
+    <table  style="height: .5em; background-color: #f96d6d;margin-left: 6%;width: 20%;">
+        <tbody>
+            <tr>
+                <td>Challan No</td>
+                <td>55297</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+    <div style="display: flex;justify-content: space-between;">
+    <table>
+        <tr>
+            <td>Student Name:</td>
+            <td><%= user.name1 %></td>
+        </tr>
+  
+        <tr>
+            <td>Father Name:</td>
+            <td><%= user.fName1 %></td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td>Registration No</td>
+            <td><%= user.regNum1 %></td>
+        </tr>
+  
+        <tr>
+            <td>Class:</td>
+            <td><%= user.class1 %></td>
+        </tr>
+    </table>
+</div>
+<h4>FEE INFORMATION</h4>
+<div style="display: flex;justify-content: space-between;">
+<table>
+    <tr>
+        <td>Fee Month</td>
+        <td><%= user.feeMonth %></td>
+    </tr>
+
+    <tr>
+        <td>Tution Fee:</td>
+        <td><%= user.tutionFee1 %></td>
+    </tr>
+    <tr>
+        <td>Previous Due</td>
+        <td><%= user.previousDue1 %></td>
+    </tr>
+    <tr>
+        <td>Fine</td>
+        <td><%= user.fine1 %></td>
+    </tr>
+    <tr>
+        <td>Security Deposit</td>
+        <td><%= user.securityDeposit1 %></td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>Last Submission Date</td>
+        <td>2023-07-10</td>
+    </tr>
+
+    <tr>
+        <td>Admission Fee:</td>
+        <td><%= user.admissionFee1 %></td>
+    </tr>
+    <tr>
+        <td>Annual Charges</td>
+        <td><%= user.annualCharges1 %></td>
+    </tr>
+    <tr>
+        <td>Misc. Charges</td>
+        <td><%= user.miscAmount %></td>
+    </tr>
+    <tr>
+        <td>Misc. Description</td>
+        <td><%= user.miscDescription %></td>
+    </tr>
+</table>
+</div>
+<div style="display: flex;justify-content: space-between;margin-top: .5em;">
+    <table style="margin-right:10em;height: .5em ">
+        <tbody>
+            <tr>
+                <td style="font-weight:900;">Total Amount Due</td>
+                <td style="font-weight:900;"><%= user.totalAmountDue1 %></td>
+            </tr>
+        </tbody>
+    </table>
+    <h4>Collection Date,Sign & Stamp</h4>
+</div>    
+<hr/>
+<h4 style="text-align: center;">School Copy</h4>
+<h4 >STUDENT INFORMATION</h4>
+<table style="width: 30%;">
+<tbody>
+    <tr>
+        <td style="width: 60.5%;font-weight:900;">Challan No</td>
+        <td style="width: 20%;font-weight:900;"><%= user.regNum2 %></td>
+    </tr>
+</tbody>
+</table>
+    <div style="display: flex;justify-content: space-between;">
+    <table>
+        <tr>
+            <td style="font-weight:900;">Student Name:</td>
+            <td style="font-weight:900;"><%= user.name1 %></td>
+        </tr>
+  
+        <tr>
+            <td style="font-weight:900;">Father Name:</td>
+            <td style="font-weight:900;"><%= user.fName1%></td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td style="font-weight:900;">Registration No</td>
+            <td style="font-weight:900;"><%= user.regNum1 %></td>
+        </tr>
+  
+        <tr>
+            <td style="font-weight:900;">Class:</td>
+            <td style="font-weight:900;"><%= user.class1 %></td>
+        </tr>
+    </table>
+</div>
+<h4>FEE INFORMATION</h4>
+<div style="display: flex;justify-content: space-between;">
+<table>
+    <tr>
+        <td>Fee Month</td>
+        <td><%= user.feeMonth %></td>
+    </tr>
+
+    <tr>
+        <td>Tution Fee:</td>
+        <td><%= user.tutionFee1 %></td>
+    </tr>
+    <tr>
+        <td>Previous Due</td>
+        <td><%= user.previousDue1 %></td>
+    </tr>
+    <tr>
+        <td>Fine</td>
+        <td><%= user.fine1 %></td>
+    </tr>
+    <tr>
+        <td>Security Deposit</td>
+        <td><%= user.securityDeposit1 %></td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>Last Submission Date</td>
+        <td>2023-07-10</td>
+    </tr>
+
+    <tr>
+        <td>Admission Fee:</td>
+        <td><%= user.admissionFee1 %></td>
+    </tr>
+    <tr>
+        <td>Annual Charges</td>
+        <td><%= user.annualCharges1 %></td>
+    </tr>
+    <tr>
+        <td>Misc. Charges</td>
+        <td><%= user.miscAmount %></td>
+    </tr>
+    <tr>
+        <td>Misc. Description</td>
+        <td><%= user.miscDescription %></td>
+    </tr>
+</table>
+</div>
+
+<div style="display: flex;justify-content: space-between;margin-top: .5em;">
+    <table style="margin-right:10em;height: .5em ">
+        <tbody>
+            <tr>
+                <td style="font-weight:900;">Total Amount Due</td>
+                <td style="font-weight:900;"><%= user.totalAmountDue1 %></td>
+            </tr>
+        </tbody>
+    </table>
+    <h4>Collection Date,Sign & Stamp</h4>
+</div>    
+<hr/>
+</body>
+</html>

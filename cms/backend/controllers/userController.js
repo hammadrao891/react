@@ -1,26 +1,37 @@
 const asyncHandler = require("express-async-handler");
 const  db  = require("../db");
-const PDFDocument = require('pdfkit');
-const fs = require('fs');
 const path = require('path');
+const puppeteer = require('puppeteer');
+const ejs = require('ejs');
+const fs = require('fs');
 
 // Register User
 const registerUser = asyncHandler(async (req, res) => {
-    const { name,classs,current_fee_month,current_fee_year,regNum,fName,address,contact,MonthlyFeeDetails,mName,officeName,monthlyFee,fCnic,mCnic,homeLandmark,officeLandmark,village,homeContact,workContact,admissionFee,securityDeposit,annualCharges,fOccupation,mOccupation,dob,gender,admissionDate} = req.body;
+    const { name,classs,current_fee_month,current_fee_year,regNum,fName,address,contact,MonthlyFeeDetails,mName,officeName,monthlyFee,fCnic,mCnic,homeLandmark,officeLandmark,village,homeContact,workContact,admissionFee,securityDeposit,annualCharges,fOccupation,mOccupation,dob,gender,admissionDate, previousDue,totalAmountDue,paymentStatus,feeMonth,paidAmount,fine,paymentDate,lastMonthStatus} = req.body;
 console.log(req.body)
     // if (!name || !classs) {
     //   return res.status(400).json({ error: 'Name and classs are required' });
     // }
   
-    const sql = 'INSERT INTO students (name, classs, current_fee_month, current_fee_year, regNum, fName, address, contact, MonthlyFeeDetails, mName, officeName, monthlyFee, fCnic, mCnic, homeLandmark, officeLandmark, village, homeContact, workContact, admissionFee, securityDeposit, annualCharges, fOccupation, mOccupation, dob, gender,admissionDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);'
-    const values = [name, classs,current_fee_month,current_fee_year,regNum,fName,address,contact,MonthlyFeeDetails,mName,officeName,monthlyFee,fCnic,mCnic,homeLandmark,officeLandmark,village,homeContact,workContact,admissionFee,securityDeposit,annualCharges,fOccupation,mOccupation,dob,gender,admissionDate];
+    const sql = 'INSERT INTO students (name, classs, current_fee_month, current_fee_year, regNum, fName, address, contact, MonthlyFeeDetails, mName, officeName, monthlyFee, fCnic, mCnic, homeLandmark, officeLandmark, village, homeContact, workContact, admissionFee, securityDeposit, annualCharges, fOccupation, mOccupation, dob, gender,admissionDate) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?);'
+    const values = [name, classs, current_fee_month, current_fee_year, regNum, fName, address, contact, MonthlyFeeDetails, mName, officeName, monthlyFee, fCnic, mCnic, homeLandmark, officeLandmark, village, homeContact, workContact, admissionFee, securityDeposit, annualCharges, fOccupation, mOccupation, dob, gender,admissionDate];
   
     db.query(sql, values, (err, result) => {
       if (err) {
         console.error('Error registering student: ' + err.message);
         return res.status(500).json({ error: 'Internal Server Error' });
       }
-  
+      else
+      {
+        const sqlFee='insert into fee(regNum,previousDue,totalAmountDue,paymentStatus,feeMonth,paidAmount,fine,paymentDate,lastMonthStatus) values(?,?,?,?,?,?,?,?,?)'
+        const value=[regNum,previousDue,totalAmountDue,paymentStatus,feeMonth,paidAmount,fine,paymentDate,lastMonthStatus]
+        db.query(sqlFee, value, (err, result) => {
+          if (err) {
+            console.error('Error registering student: ' + err.message);
+            // return res.status(500).json({ error: 'Internal Server Error' });
+          }
+      })
+    }
       res.status(201).json({ message: 'Student registered successfully', studentId: result.insertId });
     });
 });
@@ -234,41 +245,138 @@ const overallFeeDetails = asyncHandler(async(req,res)=>{
 
 })
 
+async function renderEjsTemplate(templatePath, data) {
+  const template = fs.readFileSync(templatePath, 'utf-8');
+  return ejs.render(template, data);
+}
+async function generatePDF(htmlContent, pdfFilePath) {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+
+  await page.setContent(htmlContent);
+
+  await page.pdf({ path: pdfFilePath, format: 'A4' });
+
+  await browser.close();
+
+  console.log(`PDF generated successfully at: ${pdfFilePath}`);
+}
 const generateChallan = asyncHandler(async(req,res)=>{
-  const { studentId, month, year } = req.params;
-
-  if (!studentId || !month || !year) {
-    return res.status(400).json({ error: 'Student ID, month, and year are required' });
-  }
-
-  const sql = 'SELECT name FROM students WHERE id = ?';
-  db.query(sql, [studentId], (err, result) => {
-    if (err) {
-      console.error('Error retrieving student name: ' + err.message);
-      return res.status(500).json({ error: 'Internal Server Error' });
-    }
-
-    const studentName = result.length > 0 ? result[0].name : 'Unknown Student';
-
-    const doc = new PDFDocument();
-    const fileName = `Fee_Challan_${studentName}_${month}_${year}.pdf`;
-    const filePath = `./challans/${fileName}`;
-
-    doc.pipe(fs.createWriteStream(filePath));
-
-    doc.fontSize(14).text('Fee Challan', { align: 'center' });
-    doc.moveDown();
-    doc.fontSize(12).text(`Student: ${studentName}`);
-    doc.fontSize(12).text(`Month: ${month}`);
-    doc.fontSize(12).text(`Year: ${year}`);
-    doc.moveDown();
-
-    doc.end();
-
-    res.status(200).json({ downloadLink: `http://localhost:3000/downloadChallan/${fileName}` });
-  });
+  // const { studentId, month, year } = req.params;
+const data = req.body;
+console.log(data)
   
+const query = 'SELECT fee.previousDue, fee.totalAmountDue, fee.paymentStatus, students.name, fee.feeMonth,students.fName,students.MonthlyFeeDetails,fee.fine, students.securityDeposit,fee.totalAmountDue,students.regNum, students.classs,students.admissionFee,students.annualCharges FROM fee JOIN students ON fee.regNum = students.regNum;'
+db.query(query, async(error, results) => {
+  if (error) {
+    console.error('Error executing query:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  } else {
+for (var i = 0 ;i < results.length;i++)
+{
+
+try {
+  const ejsTemplatePath = 'challan.ejs'; // Replace with the actual path
+  
+
+  const userData = {
+      name1: `${results[i+1].name}`,
+      fName1: `${results[i].fName}`,
+      regNum1: `${results[i].regNum}`,
+      previousDue1:`${results[i].previousDue}`,
+      totalAmountDue1:data.MonthlyFeeDetails && data.admissionFee && data.annualCharges ? parseInt(results[i].annualCharges) +parseInt(data.miscAmount) + parseInt(results[i].previousDue) +  parseInt(results[i].MonthlyFeeDetails) + parseInt(results[i].admissionFee) + parseInt(results[i].fine)+ parseInt(results[i].securityDeposit) 
+      :data.MonthlyFeeDetails ?parseInt(results[i].previousDue) +  parseInt(results[i].MonthlyFeeDetails)  + parseInt(results[i].fine)+ parseInt(results[i].securityDeposit)  
+      :data.annualCharges ? parseInt(results[i].previousDue) +parseInt(results[i].annualCharges) + parseInt(results[i].fine)+ parseInt(results[i].securityDeposit)+parseInt(data.miscAmount)  
+      :data.admissionFee && parseInt(results[i].previousDue) +   parseInt(results[i].admissionFee) + parseInt(results[i].fine)+ parseInt(results[i].securityDeposit) +parseInt(data.miscAmount) ,
+      paymentStatus1:`${results[i].paymentStatus}`,
+      feeMonth1:`${results[i].feeMonth}`,
+      tutionFee1:`${results[i].MonthlyFeeDetails}`,
+      fine1:`${results[i].fine}`,
+      securityDeposit1:`${results[i].securityDeposit}`,
+      class1:`${results[i].classs}`,
+      admissionFee1:`${results[i].admissionFee}`,
+      annualCharges1:`${results[i].annualCharges}`,
+      name2: `${results[i+1].name}`,
+      fName2: `${results[i+1].fName}`,
+      regNum2: `${results[i+1].regNum}`,
+      previousDue2:`${results[i+1].previousDue}`,
+      totalAmountDue2:data.MonthlyFeeDetails && data.admissionFee && data.annualCharges ? parseInt(results[i+1].annualCharges) +parseInt(data.miscAmount) + parseInt(results[i+1].previousDue) +  parseInt(results[i+1].MonthlyFeeDetails) + parseInt(results[i+1].admissionFee) + parseInt(results[i+1].fine)+ parseInt(results[i+1].securityDeposit) 
+      :data.MonthlyFeeDetails ?parseInt(results[i+1].previousDue) +  parseInt(results[i+1].MonthlyFeeDetails)  + parseInt(results[i+1].fine)+ parseInt(results[i+1].securityDeposit)  
+      :data.annualCharges ? parseInt(results[i+1].previousDue) +parseInt(results[i+1].annualCharges) + parseInt(results[i+1].fine)+ parseInt(results[i+1].securityDeposit)+parseInt(data.miscAmount)  
+      :data.admissionFee && parseInt(results[i+1].previousDue) +   parseInt(results[i+1].admissionFee) + parseInt(results[i+1].fine)+ parseInt(results[i+1].securityDeposit) +parseInt(data.miscAmount) ,
+      paymentStatus2:`${results[i+1].paymentStatus}`,
+      feeMonth2:`${results[i+1].feeMonth}`,
+      tutionFee2:`${results[i+1].MonthlyFeeDetails}`,
+      fine2:`${results[i+1].fine}`,
+      securityDeposit2:`${results[i+1].securityDeposit}`,
+      class2:`${results[i+1].classs}`,
+      admissionFee2:`${results[i+1].admissionFee}`,
+      annualCharges2:`${results[i+1].annualCharges}`,
+      miscAmount:data.miscAmount,
+      miscDescription:data.miscDescription,
+      feeMonth:data.feeMonth
+
+
+      // Add more dynamic values as needed
+  };
+  
+  const pdfFilePath = `${userData.regNum1}.pdf`;
+  const htmlContent = await renderEjsTemplate(ejsTemplatePath, { user: userData });
+
+  await generatePDF(htmlContent, pdfFilePath);
+  i++
+  console.log(i)
+  if(results.length%2 !== 0 && i===results.length-2)
+  {
+    const userData = {
+      name1: `${results[results.length-1].name}`,
+      fName1: `${results[results.length-1].fName}`,
+      regNum1: `${results[results.length-1].regNum}`,
+      previousDue1:`${results[results.length-1].previousDue}`,
+      totalAmountDue1:data.MonthlyFeeDetails && data.admissionFee && data.annualCharges ? parseInt(results[results.length-1].annualCharges) +parseInt(data.miscAmount) + parseInt(results[results.length-1].previousDue) +  parseInt(results[results.length-1].MonthlyFeeDetails) + parseInt(results[results.length-1].admissionFee) + parseInt(results[results.length-1].fine)+ parseInt(results[results.length-1].securityDeposit) 
+      :data.MonthlyFeeDetails ?parseInt(results[results.length-1].previousDue) +  parseInt(results[results.length-1].MonthlyFeeDetails)  + parseInt(results[results.length-1].fine)+ parseInt(results[results.length-1].securityDeposit)  
+      :data.annualCharges ? parseInt(results[results.length-1].previousDue) +parseInt(results[results.length-1].annualCharges) + parseInt(results[results.length-1].fine)+ parseInt(results[results.length-1].securityDeposit)+parseInt(data.miscAmount)  
+      :data.admissionFee && parseInt(results[results.length-1].previousDue) +   parseInt(results[results.length-1].admissionFee) + parseInt(results[results.length-1].fine)+ parseInt(results[results.length-1].securityDeposit) +parseInt(data.miscAmount) ,
+      paymentStatus1:`${results[results.length-1].paymentStatus}`,
+      feeMonth1:`${results[results.length-1].feeMonth}`,
+      tutionFee1:`${results[results.length-1].MonthlyFeeDetails}`,
+      fine1:`${results[results.length-1].fine}`,
+      securityDeposit1:`${results[results.length-1].securityDeposit}`,
+      class1:`${results[results.length-1].classs}`,
+      admissionFee1:`${results[results.length-1].admissionFee}`,
+      annualCharges1:`${results[results.length-1].annualCharges}`,
+      miscAmount:data.miscAmount,
+      miscDescription:data.miscDescription,
+      feeMonth:data.feeMonth
+
+
+      // Add more dynamic values as needed
+  };
+  const pdfFilePath = `lastChallan.pdf`;
+  const ejsTemplatePath2 = 'singleChallan.ejs';
+  const htmlContent = await renderEjsTemplate(ejsTemplatePath2, { user: userData });
+
+  await generatePDF(htmlContent, pdfFilePath);
+
+
+  }
+  res.status(200).json("Success");
+} catch (error) {
+  console.error('Error:', error);
+}
+} 
+    }
+    
+  
+});
+ 
+
+    
+    
+   
 })
+ // });
+  
 
 const downloadChallan= asyncHandler(async (req, res) => {
   const { fileName } = req.params;
@@ -282,62 +390,105 @@ const downloadChallan= asyncHandler(async (req, res) => {
   fs.createReadStream(filePath).pipe(res);
 });
 
-const generateAllChallans = asyncHandler(async (req,res)=>{
-  const { month, year } = req.params;
+const generateAllChallans = asyncHandler(async (req, res) => {
+ 
 
-  if (!month || !year) {
-    return res.status(400).json({ error: 'Month and year are required' });
-  }
+  // const sql = 'SELECT regNum FROM students';
+  // db.query(sql, (err, result) => {
+  //   if (err) {
+  //     console.error('Error retrieving student IDs: ' + err.message);
+  //     return res.status(500).json({ error: 'Internal Server Error' });
+  //   }
 
-  const sql = 'SELECT id FROM students';
-  db.query(sql, (err, result) => {
-    if (err) {
-      console.error('Error retrieving student IDs: ' + err.message);
-      return res.status(500).json({ error: 'Internal Server Error' });
+  //   // const promises = result.map(row => generateFeeChallan(row.regNum, month, year));
+    
+  //   result.map((m)=> generateFeeChallan(m, 'January', 2022)
+  //   .then((filePath) => {
+  //     console.log(`PDF created successfully: ${filePath}`);
+  //   })
+  //   .catch((err) => {
+  //     console.error('Error generating PDF: ' + err.message);
+  //   })
+  //   )
+  //   // Promise.all(promises)
+    //   .then(() => {
+      
+    for(var i = 0;i<10;i++ ){
+      console.log(i)
+      generateFeeChallan("m", 'January', 2022)
     }
-    const promises = result.map(row => generateFeeChallan(row.id, month, year));
-
-    Promise.all(promises)
-      .then(() => {
         res.status(200).json({ message: 'Fee challans generated for all students' });
-      })
-      .catch(error => {
-        console.error('Error generating fee challans: ' + error.message);
-        res.status(500).json({ error: 'Internal Server Error' });
-      });
+    //   })
+    //   .catch(error => {
+    //     console.error('Error generating fee challans: ' + error.message);
+    //     res.status(500).json({ error: 'Internal Server Error' });
+    //   });
   });
-})
+// });
 
 function generateFeeChallan(studentId, month, year) {
   return new Promise((resolve, reject) => {
-    const sql = 'SELECT name FROM students WHERE id = ?';
+    const sql = 'SELECT name FROM students WHERE regNum = ?';
     db.query(sql, [studentId], (err, result) => {
       if (err) {
         console.error('Error retrieving student name: ' + err.message);
         reject(err);
       }
 
-      const studentName = result.length > 0 ? studentId : 'Unknown Student';
+      const studentName = result.length > 0 ? result[0].name : 'Unknown Student';
 
       const doc = new PDFDocument();
+      const doc2 = new PDFDocumentt()
       const fileName = `Fee_Challan_${studentName}_${month}_${year}.pdf`;
-      const filePath = path.join(__dirname,"..","challans", fileName);
+      const filePath = path.join(__dirname, '..', 'challans', fileName);
 
-      doc.pipe(fs.createWriteStream(filePath));
+      const stream = fs.createWriteStream(filePath);
+      doc.pipe(stream);
 
       doc.fontSize(14).text('Fee Challan', { align: 'center' });
       doc.moveDown();
-      doc.fontSize(12).text(`Student: ${studentName}`);
-      doc.fontSize(12).text(`Month: ${month}`);
-      doc.fontSize(12).text(`Year: ${year}`);
-      doc.moveDown();
+
+      // Create a table using text drawing
+      const table = {
+        headers: ['Description', 'Amount'],
+        rows: [
+          ['Monthly Tuition Fee', '$100'], // Add your data here
+          ['Previous Due', '$50'],
+          ['Total Amount Due', '$150'],
+        ],
+      };
+
+      const startX = 50;
+      const startY = doc.y;
+      const cellWidth = 150;
+
+      // Draw table headers
+      table.headers.forEach((header, i) => {
+        doc.text(header, startX + i * cellWidth, startY, { width: cellWidth, align: 'left' });
+      });
+
+      // Draw table rows
+      table.rows.forEach((row, rowIndex) => {
+        row.forEach((cell, colIndex) => {
+          doc.text(cell, startX + colIndex * cellWidth, startY + (rowIndex + 1) * 20, { width: cellWidth, align: 'left' });
+        });
+      });
 
       doc.end();
 
-      resolve();
+      stream.on('finish', () => {
+        resolve(filePath);
+      });
+
+      stream.on('error', (streamErr) => {
+        reject(streamErr);
+      });
     });
   });
 }
+
+
+
 
 const getPaidStudents =asyncHandler((req,res) => {
   const month = 3;
