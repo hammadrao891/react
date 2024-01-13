@@ -57,15 +57,15 @@ fetchStudent();
        
      <table className="table">
           <thead>
-            <th>Sr #</th>
-            <th>Reg No.</th>
-            <th>Student Name</th>
-            <th>Father Name</th>
-            <th>Class</th>
-            <th>Monthlt Tution Fee</th>
-            <th>Previous Due</th>
-            <th>total Amount Due</th>
-            <th>Payment Status</th>
+            <th>Exp ID</th>
+            <th>Exp Type</th>
+            <th>Description</th>
+            <th>Account</th>
+            <th>Loan Date</th>
+            <th>Loan Amount</th>
+            <th>Return Amount</th>
+            <th>Return Date</th>
+            <th>Return Status</th>
           </thead>
           <tbody>
           {details.map((m,index)=>

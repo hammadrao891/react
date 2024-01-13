@@ -57,15 +57,16 @@ fetchStudent();
        
      <table className="table">
           <thead>
-            <th>Sr #</th>
-            <th>Reg No.</th>
-            <th>Student Name</th>
-            <th>Father Name</th>
-            <th>Class</th>
-            <th>Monthlt Tution Fee</th>
-            <th>Previous Due</th>
-            <th>total Amount Due</th>
-            <th>Payment Status</th>
+            <th>ID</th>
+            <th>Account Name</th>
+            <th>Balance Before</th>
+            <th>Balance After</th>
+            <th>Fee ID</th>
+            <th>Fee Paid</th>
+            <th>Expense ID</th>
+            <th>Expense Amount</th>
+            <th>Time</th>
+            <th>Type</th>
           </thead>
           <tbody>
           {details.map((m,index)=>
@@ -79,6 +80,7 @@ fetchStudent();
                <td>{m.previousDue}</td>
                <td>{m.totalAmountDue}</td>
                <td>{m.paymentStatus}</td>
+               <td>{m.type}</td>
           </tr>)}
          </tbody>
          </table>

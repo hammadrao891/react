@@ -74,6 +74,10 @@ import LoanReturn from "./pages/LoanReturn";
 import CompleteLoansReport from "./pages/CompleteLoansReport";
 import MonthlyLoansReturnReport from "./pages/MonthlyLoansReturnReport";
 import EnterExpensesFeeCollectionAccount from "./pages/EnterExpensesFeeCollectionAccount";
+import CompleteReportPaidAndUnpaid from "./pages/CompleteReportPaidAndUnpaidByClass";
+import PaidReportByClass from "./pages/PaidReportByClass";
+import NotPaidReportByClass from "./pages/NotPaidReportByClass";
+import MainPage from "./pages/MainPage";
 
 axios.defaults.withCredentials = true;
 
@@ -112,6 +116,39 @@ function App() {
             <Sidebar>
               <Layout>
                 <CheckStudentInfo />
+              </Layout>
+            </Sidebar>
+          }
+          
+        />
+        <Route
+          path="/complete-report-paid-and-unpaid-by-class"
+          element={
+            <Sidebar>
+              <Layout>
+                <CompleteReportPaidAndUnpaid />
+              </Layout>
+            </Sidebar>
+          }
+          
+        />
+        <Route
+          path="/paid-report-by-class"
+          element={
+            <Sidebar>
+              <Layout>
+                <PaidReportByClass />
+              </Layout>
+            </Sidebar>
+          }
+          
+        />
+        <Route
+          path="/not-paid-report-by-class"
+          element={
+            <Sidebar>
+              <Layout>
+                <NotPaidReportByClass />
               </Layout>
             </Sidebar>
           }
@@ -667,7 +704,11 @@ function App() {
             </Sidebar>
           }
         />
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={ <Sidebar>
+              <Layout>
+                <MainPage />
+              </Layout>
+            </Sidebar> } />
        <Route path="/login" element={user ? <Sidebar>
               <Layout>
                 <Dashboard />

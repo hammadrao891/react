@@ -58,14 +58,9 @@ fetchStudent();
      <table className="table">
           <thead>
             <th>Sr #</th>
-            <th>Reg No.</th>
-            <th>Student Name</th>
-            <th>Father Name</th>
             <th>Class</th>
-            <th>Monthlt Tution Fee</th>
-            <th>Previous Due</th>
-            <th>total Amount Due</th>
             <th>Payment Status</th>
+            <th>Count</th>
           </thead>
           <tbody>
           {details.map((m,index)=>
@@ -74,11 +69,7 @@ fetchStudent();
                <td>{m.regNum}</td>
                <td>{m.name}</td>
                <td>{m.fName}</td> 
-               <td>{m.classs}</td>
-               <td>{m.MonthlyFeeDetails}</td>
-               <td>{m.previousDue}</td>
-               <td>{m.totalAmountDue}</td>
-               <td>{m.paymentStatus}</td>
+              
           </tr>)}
          </tbody>
          </table>

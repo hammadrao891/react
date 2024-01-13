@@ -10,6 +10,8 @@ import "./dashboard/Table.scss";
 
 
 const MonthlyFeeCollection = () => {
+  const [feeMonth,setFeeMonth]=useState()
+  const [options,setOptions]=useState()
   const [subtype, setSubtype] = useState("");
   const [type,setType]=useState("")
   const [data,setData]=useState()
@@ -49,37 +51,66 @@ const fetchStudent=async()=>{
 fetchStudent();
 },[])
 
+useEffect(() => {
+  const generateOptions = () => {
+    const currentDate = new Date();
+    const startDate = new Date(2010, 0); // January 2010
+    const newOptions = [];
+
+    while (startDate <= currentDate) {
+      const formattedDate = new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric' }).format(startDate);
+      newOptions.push({ value: formattedDate, label: formattedDate });
+
+      // Move to the next month
+      startDate.setMonth(startDate.getMonth() + 1);
+    }
+
+    setOptions(newOptions);
+    console.log(newOptions)
+  };
+
+  generateOptions();
+  
+}, []); 
     
     
   return (
     <div className="add-tender">
-   {!details ? <h4>Loading...</h4> :<>
+      <div style={{color:"black",fontSize:"medium",marginTop:"1em"}}>
+      <ToastContainer/>
+        <label htmlFor="monthYearDropdown">Select Month-Year:</label>
+        <select name="feeMonth" onChange={e=>setFeeMonth(e.target.value)} id="monthYearDropdown">
+          {options && options.map((option) => (
+            <option key={option.value} value={option.value}>{option.label}</option>
+          ))}
+        </select>
+        </div>
+      
+   {feeMonth && <>
        
      <table className="table">
           <thead>
             <th>Sr #</th>
-            <th>Reg No.</th>
+            <th>Fee ID</th>
+            <th>Fee Month</th>
+            <th>Student ID</th>
             <th>Student Name</th>
-            <th>Father Name</th>
             <th>Class</th>
-            <th>Monthlt Tution Fee</th>
-            <th>Previous Due</th>
-            <th>total Amount Due</th>
-            <th>Payment Status</th>
+            <th>Paid Amount</th>
+            
           </thead>
           <tbody>
-          {details.map((m,index)=>
-          <tr key={index}>
-               <td>{index+1}</td>
-               <td>{m.regNum}</td>
-               <td>{m.name}</td>
-               <td>{m.fName}</td> 
-               <td>{m.classs}</td>
-               <td>{m.MonthlyFeeDetails}</td>
-               <td>{m.previousDue}</td>
-               <td>{m.totalAmountDue}</td>
-               <td>{m.paymentStatus}</td>
-          </tr>)}
+          {/* {details.map((m,index)=> */}
+          <tr >
+               <td>index+1</td>
+               <td>m.regNum</td>
+               <td>m.name</td>
+               <td>m.fName</td> 
+               <td>m.classs</td>
+               <td>m.MonthlyFeeDetails</td>
+               <td>m.previousDue</td>
+          </tr>
+          {/* )} */}
          </tbody>
          </table>
          </>}

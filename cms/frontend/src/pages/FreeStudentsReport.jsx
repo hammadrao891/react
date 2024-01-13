@@ -62,10 +62,9 @@ fetchStudent();
             <th>Student Name</th>
             <th>Father Name</th>
             <th>Class</th>
-            <th>Monthlt Tution Fee</th>
-            <th>Previous Due</th>
-            <th>total Amount Due</th>
-            <th>Payment Status</th>
+            <th>Monthly Tution Fee</th>
+            <th>Father Mobile No.</th>
+            <th>Address</th>
           </thead>
           <tbody>
           {details.map((m,index)=>
@@ -78,7 +77,6 @@ fetchStudent();
                <td>{m.MonthlyFeeDetails}</td>
                <td>{m.previousDue}</td>
                <td>{m.totalAmountDue}</td>
-               <td>{m.paymentStatus}</td>
           </tr>)}
          </tbody>
          </table>

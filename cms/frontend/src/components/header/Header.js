@@ -10,9 +10,9 @@ const Header = () => {
   const name = useSelector(selectName);
 
   const logout = async () => {
-    navigate("/login");
-    localStorage.removeItem("user")
-    window.location.reload("/")
+    // navigate("/login");
+    // localStorage.removeItem("user")
+    // window.location.reload("/")
   };
 
   return (

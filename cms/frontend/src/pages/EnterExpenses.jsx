@@ -27,7 +27,19 @@ const EnterExpenses = () => {
   const [newMonthlyFeeDetails,setNewMonthlyFeeDetails] = useState()
   
   const navigate = useNavigate()
-
+  const currentDate = new
+ 
+  Date();
+  const year = currentDate.getFullYear();
+  const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+  const day = String(currentDate.getDate()).padStart(2,
+   
+  '0');
+  const hours = String(currentDate.getHours()).padStart(2, '0');
+  const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+  const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+  
+  const formattedDate = `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
 useEffect(()=>{
 const fetchStudent=async()=>{
 
@@ -53,36 +65,75 @@ fetchStudent();
     
   return (
     <div className="add-tender">
-   {!details ? <h4>Loading...</h4> :<>
        
      <table className="table">
-          <thead>
-            <th>Sr #</th>
-            <th>Reg No.</th>
-            <th>Student Name</th>
-            <th>Father Name</th>
-            <th>Class</th>
-            <th>Monthlt Tution Fee</th>
-            <th>Previous Due</th>
-            <th>total Amount Due</th>
-            <th>Payment Status</th>
-          </thead>
           <tbody>
-          {details.map((m,index)=>
-          <tr key={index}>
-               <td>{index+1}</td>
-               <td>{m.regNum}</td>
-               <td>{m.name}</td>
-               <td>{m.fName}</td> 
-               <td>{m.classs}</td>
-               <td>{m.MonthlyFeeDetails}</td>
-               <td>{m.previousDue}</td>
-               <td>{m.totalAmountDue}</td>
-               <td>{m.paymentStatus}</td>
-          </tr>)}
+          <tr>
+               <td>Select Expense Type</td>
+               <td><select>
+                <option>Monthly Rent</option>
+                <option>Salary</option>
+                <option>Royalty</option>
+                <option>Utitlity Bills</option>
+                <option>Maintenance & Repair</option>
+                <option>Kitchen</option>
+                <option>Stationary</option>
+                <option value="EOBI">EOBI</option>
+                <option value="Social Security">Social Security</option>
+                <option value="Income Tax">Income Tax</option>
+                <option value='Personal'>Personal</option>
+                <option value='Advertisement'>Advertisement</option>
+                <option value='School Visits to HQ/Board etc'>School Visits to HQ/Board etc</option>
+                <option value='STAFF LOAN'>STAFF LOAN</option>
+                <option value='MOTORCYCLE PETROL'>MOTORCYCLE PETROL</option>
+                <option value='MOTORCYCLE REPAIR&MAINTENANCE'>MOTORCYCLE REPAIR&MAINTENANCE</option>
+                <option value='CAR REPAIR&MAINTENANCE'>CAR REPAIR&MAINTENANCE</option>
+                <option value='CAR PETROL'>CAR PETROL</option>
+                <option value='STAFF WELFARE'>STAFF WELFARE</option>
+                <option value='ASSETS'>ASSETS</option>
+                </select></td>  
+          </tr>
+          
+          <tr>
+               <td>Expense Record Time</td>
+               <td>{formattedDate}</td>  
+          </tr>
+          
+          <tr>
+               <td>Expense Description</td>
+               <td><input /></td>  
+          </tr>
+          
+          <tr>
+               <td>Expense Amount</td>
+               <td><input /></td>  
+          </tr>
+          
+          <tr>
+               <td>Expense Pay Account</td>
+               <td><select>
+               <option value="NITB Bank Account">NITB Bank Account</option>
+               <option value="Cash IN Hand Account">Cash IN Hand Account</option>
+               <option value="Fee Collection">Fee Collection</option>
+               </select></td>  
+          </tr>
+          <tr>
+               <td>Invoice Pay Person</td>
+               <td><input /></td>  
+          </tr>
+          
+          <tr>
+               <td>Invoice Number</td>
+               <td><input /></td>  
+          </tr>
+          
+          <tr>
+               <td>Invoice File Number</td>
+               <td><input /></td>  
+          </tr>
          </tbody>
          </table>
-         </>}
+         <button className="--btn --btn-primary">Submit</button>
       {/* </Card> */}
     </div>
   );

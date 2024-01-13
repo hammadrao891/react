@@ -48,4 +48,5 @@ router.put('/update-class/:classs',updateWholeClass)
 router.put('/updateDob/:regNum',updateDOB)
 router.put('/updateAdmissionDate/:regNum',UpdateAdmissionDate)
 router.delete('/terminateStudent/:regNum',terminateStudent)
+
 module.exports = router;

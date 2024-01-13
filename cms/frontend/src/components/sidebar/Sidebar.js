@@ -10,7 +10,6 @@ import { AuthContext } from "../../context/AuthContext";
 import { selectUserType } from "../../redux/features/auth/authSlice";
 import { useSelector } from "react-redux";
 const Sidebar = ({ children }) => {
-  const userType = useSelector(selectUserType);
   const [isOpen, setIsOpen] = useState(true);
   const toggle = () => setIsOpen(!isOpen);
   const navigate = useNavigate();
@@ -19,16 +18,6 @@ const {user}=useContext(AuthContext)
     navigate("/");
   };
  
-  useEffect(() => {
-    // if (user && user.userType === "Employee") {
-      
-    //   setMenuu(prevMenu => prevMenu.slice(0, -2));
-    // }
-    // if(user && user.userType === "Store Incharge")
-    // {
-    //   setMenuu(prevMenu => prevMenu.slice(0, -1))
-    // }
-  }, [user]);
   return (
     <div className="layout">
       <div className="sidebar" style={{ width: isOpen ? "230px" : "60px" }}>
@@ -48,17 +37,12 @@ const {user}=useContext(AuthContext)
           </div>
         </div>
         {
-       user.userType === "AD" ? menuAD.map((item, index) => {
+        
+       menuAD.map((item, index) => {
           return <SidebarItem key={index} item={item} isOpen={isOpen} />;
         })
-        :
-        user.userType === "Employee" ? menuEmployee.map((item, index) => {
-          return <SidebarItem key={index} item={item} isOpen={isOpen} />;
-        })
-        :
-        user.userType === "Store Incharge" && menuStoreIncharge.map((item, index) => {
-          return <SidebarItem key={index} item={item} isOpen={isOpen} />;
-        })
+        
+        
         }
 
       </div>

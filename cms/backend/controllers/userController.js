@@ -261,72 +261,197 @@ async function generatePDF(htmlContent, pdfFilePath) {
 
   console.log(`PDF generated successfully at: ${pdfFilePath}`);
 }
-const generateChallan = asyncHandler(async(req,res)=>{
-  // const { studentId, month, year } = req.params;
-const data = req.body;
-console.log(data)
+// const generateChallan = asyncHandler(async(req,res)=>{
+//   // const { studentId, month, year } = req.params;
+// const data = req.body;
+// console.log(data)
   
-const query = 'SELECT fee.previousDue, fee.totalAmountDue, fee.paymentStatus, students.name, fee.feeMonth,students.fName,students.MonthlyFeeDetails,fee.fine, students.securityDeposit,fee.totalAmountDue,students.regNum, students.classs,students.admissionFee,students.annualCharges FROM fee JOIN students ON fee.regNum = students.regNum;'
-db.query(query, async(error, results) => {
-  if (error) {
-    console.error('Error executing query:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  } else {
-for (var i = 0 ;i < results.length;i++)
-{
+// const query = 'SELECT fee.previousDue, fee.totalAmountDue, fee.paymentStatus, students.name, fee.feeMonth,students.fName,students.MonthlyFeeDetails,fee.fine, students.securityDeposit,fee.totalAmountDue,students.regNum, students.classs,students.admissionFee,students.annualCharges FROM fee JOIN students ON fee.regNum = students.regNum;'
+// db.query(query, async(error, results) => {
+//   if (error) {
+//     console.error('Error executing query:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   } else {
+// for (var i = 0 ;i < results.length;i++)
+// {
 
-try {
-  const ejsTemplatePath = 'challan.ejs'; // Replace with the actual path
+// try {
+//   const ejsTemplatePath = 'challan.ejs'; // Replace with the actual path
   
 
-  const userData = {
-      name1: `${results[i+1].name}`,
-      fName1: `${results[i].fName}`,
-      regNum1: `${results[i].regNum}`,
-      previousDue1:`${results[i].previousDue}`,
-      totalAmountDue1:data.MonthlyFeeDetails && data.admissionFee && data.annualCharges ? parseInt(results[i].annualCharges) +parseInt(data.miscAmount) + parseInt(results[i].previousDue) +  parseInt(results[i].MonthlyFeeDetails) + parseInt(results[i].admissionFee) + parseInt(results[i].fine)+ parseInt(results[i].securityDeposit) 
-      :data.MonthlyFeeDetails ?parseInt(results[i].previousDue) +  parseInt(results[i].MonthlyFeeDetails)  + parseInt(results[i].fine)+ parseInt(results[i].securityDeposit)  
-      :data.annualCharges ? parseInt(results[i].previousDue) +parseInt(results[i].annualCharges) + parseInt(results[i].fine)+ parseInt(results[i].securityDeposit)+parseInt(data.miscAmount)  
-      :data.admissionFee && parseInt(results[i].previousDue) +   parseInt(results[i].admissionFee) + parseInt(results[i].fine)+ parseInt(results[i].securityDeposit) +parseInt(data.miscAmount) ,
-      paymentStatus1:`${results[i].paymentStatus}`,
-      feeMonth1:`${results[i].feeMonth}`,
-      tutionFee1:`${results[i].MonthlyFeeDetails}`,
-      fine1:`${results[i].fine}`,
-      securityDeposit1:`${results[i].securityDeposit}`,
-      class1:`${results[i].classs}`,
-      admissionFee1:`${results[i].admissionFee}`,
-      annualCharges1:`${results[i].annualCharges}`,
-      name2: `${results[i+1].name}`,
-      fName2: `${results[i+1].fName}`,
-      regNum2: `${results[i+1].regNum}`,
-      previousDue2:`${results[i+1].previousDue}`,
-      totalAmountDue2:data.MonthlyFeeDetails && data.admissionFee && data.annualCharges ? parseInt(results[i+1].annualCharges) +parseInt(data.miscAmount) + parseInt(results[i+1].previousDue) +  parseInt(results[i+1].MonthlyFeeDetails) + parseInt(results[i+1].admissionFee) + parseInt(results[i+1].fine)+ parseInt(results[i+1].securityDeposit) 
-      :data.MonthlyFeeDetails ?parseInt(results[i+1].previousDue) +  parseInt(results[i+1].MonthlyFeeDetails)  + parseInt(results[i+1].fine)+ parseInt(results[i+1].securityDeposit)  
-      :data.annualCharges ? parseInt(results[i+1].previousDue) +parseInt(results[i+1].annualCharges) + parseInt(results[i+1].fine)+ parseInt(results[i+1].securityDeposit)+parseInt(data.miscAmount)  
-      :data.admissionFee && parseInt(results[i+1].previousDue) +   parseInt(results[i+1].admissionFee) + parseInt(results[i+1].fine)+ parseInt(results[i+1].securityDeposit) +parseInt(data.miscAmount) ,
-      paymentStatus2:`${results[i+1].paymentStatus}`,
-      feeMonth2:`${results[i+1].feeMonth}`,
-      tutionFee2:`${results[i+1].MonthlyFeeDetails}`,
-      fine2:`${results[i+1].fine}`,
-      securityDeposit2:`${results[i+1].securityDeposit}`,
-      class2:`${results[i+1].classs}`,
-      admissionFee2:`${results[i+1].admissionFee}`,
-      annualCharges2:`${results[i+1].annualCharges}`,
-      miscAmount:data.miscAmount,
-      miscDescription:data.miscDescription,
-      feeMonth:data.feeMonth
+//   const userData = {
+//       name1: `${results[i+1].name}`,
+//       fName1: `${results[i].fName}`,
+//       regNum1: `${results[i].regNum}`,
+//       previousDue1:`${results[i].previousDue}`,
+//       totalAmountDue1:data.MonthlyFeeDetails && data.admissionFee && data.annualCharges ? parseInt(results[i].annualCharges) +parseInt(data.miscAmount) + parseInt(results[i].previousDue) +  parseInt(results[i].MonthlyFeeDetails) + parseInt(results[i].admissionFee) + parseInt(results[i].fine)+ parseInt(results[i].securityDeposit) 
+//       :data.MonthlyFeeDetails ?parseInt(results[i].previousDue) +  parseInt(results[i].MonthlyFeeDetails)  + parseInt(results[i].fine)+ parseInt(results[i].securityDeposit)  
+//       :data.annualCharges ? parseInt(results[i].previousDue) +parseInt(results[i].annualCharges) + parseInt(results[i].fine)+ parseInt(results[i].securityDeposit)+parseInt(data.miscAmount)  
+//       :data.admissionFee && parseInt(results[i].previousDue) +   parseInt(results[i].admissionFee) + parseInt(results[i].fine)+ parseInt(results[i].securityDeposit) +parseInt(data.miscAmount) ,
+//       paymentStatus1:`${results[i].paymentStatus}`,
+//       feeMonth1:`${results[i].feeMonth}`,
+//       tutionFee1:`${results[i].MonthlyFeeDetails}`,
+//       fine1:`${results[i].fine}`,
+//       securityDeposit1:`${results[i].securityDeposit}`,
+//       class1:`${results[i].classs}`,
+//       admissionFee1:`${results[i].admissionFee}`,
+//       annualCharges1:`${results[i].annualCharges}`,
+//       name2: `${results[i+1].name}`,
+//       fName2: `${results[i+1].fName}`,
+//       regNum2: `${results[i+1].regNum}`,
+//       previousDue2:`${results[i+1].previousDue}`,
+//       totalAmountDue2:data.MonthlyFeeDetails && data.admissionFee && data.annualCharges ? parseInt(results[i+1].annualCharges) +parseInt(data.miscAmount) + parseInt(results[i+1].previousDue) +  parseInt(results[i+1].MonthlyFeeDetails) + parseInt(results[i+1].admissionFee) + parseInt(results[i+1].fine)+ parseInt(results[i+1].securityDeposit) 
+//       :data.MonthlyFeeDetails ?parseInt(results[i+1].previousDue) +  parseInt(results[i+1].MonthlyFeeDetails)  + parseInt(results[i+1].fine)+ parseInt(results[i+1].securityDeposit)  
+//       :data.annualCharges ? parseInt(results[i+1].previousDue) +parseInt(results[i+1].annualCharges) + parseInt(results[i+1].fine)+ parseInt(results[i+1].securityDeposit)+parseInt(data.miscAmount)  
+//       :data.admissionFee && parseInt(results[i+1].previousDue) +   parseInt(results[i+1].admissionFee) + parseInt(results[i+1].fine)+ parseInt(results[i+1].securityDeposit) +parseInt(data.miscAmount) ,
+//       paymentStatus2:`${results[i+1].paymentStatus}`,
+//       feeMonth2:`${results[i+1].feeMonth}`,
+//       tutionFee2:`${results[i+1].MonthlyFeeDetails}`,
+//       fine2:`${results[i+1].fine}`,
+//       securityDeposit2:`${results[i+1].securityDeposit}`,
+//       class2:`${results[i+1].classs}`,
+//       admissionFee2:`${results[i+1].admissionFee}`,
+//       annualCharges2:`${results[i+1].annualCharges}`,
+//       miscAmount:data.miscAmount,
+//       miscDescription:data.miscDescription,
+//       feeMonth:data.feeMonth
 
 
-      // Add more dynamic values as needed
-  };
+//       // Add more dynamic values as needed
+//   };
   
-  const pdfFilePath = `${userData.regNum1}.pdf`;
-  const htmlContent = await renderEjsTemplate(ejsTemplatePath, { user: userData });
+//   const pdfFilePath = `${userData.regNum1}.pdf`;
+//   const htmlContent = await renderEjsTemplate(ejsTemplatePath, { user: userData });
 
-  await generatePDF(htmlContent, pdfFilePath);
-  i++
-  console.log(i)
-  if(results.length%2 !== 0 && i===results.length-2)
+//   await generatePDF(htmlContent, pdfFilePath);
+//   i++
+//   console.log(i)
+//   if(results.length%2 !== 0 && i===results.length-2)
+//   {
+//     const userData = {
+//       name1: `${results[results.length-1].name}`,
+//       fName1: `${results[results.length-1].fName}`,
+//       regNum1: `${results[results.length-1].regNum}`,
+//       previousDue1:`${results[results.length-1].previousDue}`,
+//       totalAmountDue1:data.MonthlyFeeDetails && data.admissionFee && data.annualCharges ? parseInt(results[results.length-1].annualCharges) +parseInt(data.miscAmount) + parseInt(results[results.length-1].previousDue) +  parseInt(results[results.length-1].MonthlyFeeDetails) + parseInt(results[results.length-1].admissionFee) + parseInt(results[results.length-1].fine)+ parseInt(results[results.length-1].securityDeposit) 
+//       :data.MonthlyFeeDetails ?parseInt(results[results.length-1].previousDue) +  parseInt(results[results.length-1].MonthlyFeeDetails)  + parseInt(results[results.length-1].fine)+ parseInt(results[results.length-1].securityDeposit)  
+//       :data.annualCharges ? parseInt(results[results.length-1].previousDue) +parseInt(results[results.length-1].annualCharges) + parseInt(results[results.length-1].fine)+ parseInt(results[results.length-1].securityDeposit)+parseInt(data.miscAmount)  
+//       :data.admissionFee && parseInt(results[results.length-1].previousDue) +   parseInt(results[results.length-1].admissionFee) + parseInt(results[results.length-1].fine)+ parseInt(results[results.length-1].securityDeposit) +parseInt(data.miscAmount) ,
+//       paymentStatus1:`${results[results.length-1].paymentStatus}`,
+//       feeMonth1:`${results[results.length-1].feeMonth}`,
+//       tutionFee1:`${results[results.length-1].MonthlyFeeDetails}`,
+//       fine1:`${results[results.length-1].fine}`,
+//       securityDeposit1:`${results[results.length-1].securityDeposit}`,
+//       class1:`${results[results.length-1].classs}`,
+//       admissionFee1:`${results[results.length-1].admissionFee}`,
+//       annualCharges1:`${results[results.length-1].annualCharges}`,
+//       miscAmount:data.miscAmount,
+//       miscDescription:data.miscDescription,
+//       feeMonth:data.feeMonth
+
+
+//       // Add more dynamic values as needed
+//   };
+//   const pdfFilePath = `lastChallan.pdf`;
+//   const ejsTemplatePath2 = 'singleChallan.ejs';
+//   const htmlContent = await renderEjsTemplate(ejsTemplatePath2, { user: userData });
+
+//   await generatePDF(htmlContent, pdfFilePath);
+
+
+//   }
+//   res.status(200).json("Success");
+// } catch (error) {
+//   console.error('Error:', error);
+// }
+// } 
+//     }
+    
+  
+// });
+ 
+
+    
+    
+   
+// })
+ // });
+  
+ const generateChallan = asyncHandler(async (req, res) => {
+  const data = req.body;
+  console.log(data);
+
+  const query =
+    'SELECT fee.previousDue, fee.totalAmountDue, fee.paymentStatus, students.name, fee.feeMonth,students.fName,students.MonthlyFeeDetails,fee.fine, students.securityDeposit,fee.totalAmountDue,students.regNum, students.classs,students.admissionFee,students.annualCharges FROM fee JOIN students ON fee.regNum = students.regNum;';
+
+  db.query(query, async (error, results) => {
+    if (error) {
+      console.error('Error executing query:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      try {
+        const ejsTemplatePath = 'challan.ejs'; // Replace with the actual path
+        const ejsTemplatePath2 = 'singleChallan.ejs';
+        const pdfFilePath = `combinedChallan.pdf`;
+
+        const usersData = [];
+        for (let i = 0; i < results.length; i++) {
+          console.log(results[i+1])
+          if(results[i+1]){
+          const userData = {
+            name1: `${results[i].name}`,
+            fName1: `${results[i].fName}`,
+            regNum1: `${results[i].regNum}`,
+            // ... other properties
+            previousDue1:`${results[i].previousDue}`,
+            totalAmountDue1:data.MonthlyFeeDetails && data.admissionFee && data.annualCharges ? parseInt(results[i].annualCharges) +parseInt(data.miscAmount) + parseInt(results[i].previousDue) +  parseInt(results[i].MonthlyFeeDetails) + parseInt(results[i].admissionFee) + parseInt(results[i].fine)+ parseInt(results[i].securityDeposit) 
+            :data.MonthlyFeeDetails ?parseInt(results[i].previousDue) +  parseInt(results[i].MonthlyFeeDetails)  + parseInt(results[i].fine)+ parseInt(results[i].securityDeposit)  
+            :data.annualCharges ? parseInt(results[i].previousDue) +parseInt(results[i].annualCharges) + parseInt(results[i].fine)+ parseInt(results[i].securityDeposit)+parseInt(data.miscAmount)  
+            :data.admissionFee && parseInt(results[i].previousDue) +   parseInt(results[i].admissionFee) + parseInt(results[i].fine)+ parseInt(results[i].securityDeposit) +parseInt(data.miscAmount) ,
+            paymentStatus1:`${results[i].paymentStatus}`,
+            feeMonth1:`${results[i].feeMonth}`,
+            tutionFee1:`${results[i].MonthlyFeeDetails}`,
+            fine1:`${results[i].fine}`,
+            securityDeposit1:`${results[i].securityDeposit}`,
+            class1:`${results[i].classs}`,
+            admissionFee1:`${results[i].admissionFee}`,
+            annualCharges1:`${results[i].annualCharges}`,
+
+            name2: results[i + 1] ? `${results[i + 1].name}` : '',
+            fName2: results[i + 1] ? `${results[i + 1].fName}` : '',
+            regNum2: results[i + 1] ? `${results[i + 1].regNum}` : '',
+            previousDue2:results[i + 1] ? `${results[i + 1].previousDue}`:'',
+            totalAmountDue2:data.MonthlyFeeDetails && data.admissionFee && data.annualCharges ? parseInt(results[i+1].annualCharges) +parseInt(data.miscAmount) + parseInt(results[i+1].previousDue) +  parseInt(results[i+1].MonthlyFeeDetails) + parseInt(results[i+1].admissionFee) + parseInt(results[i+1].fine)+ parseInt(results[i+1].securityDeposit) 
+            :data.MonthlyFeeDetails ?parseInt(results[i+1].previousDue) +  parseInt(results[i+1].MonthlyFeeDetails)  + parseInt(results[i+1].fine)+ parseInt(results[i+1].securityDeposit)  
+            :data.annualCharges ? parseInt(results[i+1].previousDue) +parseInt(results[i+1].annualCharges) + parseInt(results[i+1].fine)+ parseInt(results[i+1].securityDeposit)+parseInt(data.miscAmount)  
+            :data.admissionFee && parseInt(results[i+1].previousDue) +   parseInt(results[i+1].admissionFee) + parseInt(results[i+1].fine)+ parseInt(results[i+1].securityDeposit) +parseInt(data.miscAmount) ,
+            paymentStatus2:results[i + 1] ? `${results[i+1].paymentStatus}`:'',
+            feeMonth2:results[i + 1] ? `${results[i+1].feeMonth}`:'',
+            tutionFee2:results[i + 1] ? `${results[i+1].MonthlyFeeDetails}` :'',
+            fine2:results[i + 1] ? `${results[i+1].fine}`:'',
+            securityDeposit2:results[i + 1] ?`${results[i+1].securityDeposit}`:'',
+            class2:results[i + 1] ? `${results[i+1].classs}`:'',
+            admissionFee2:results[i + 1] ?`${results[i+1].admissionFee}`:'',
+            annualCharges2:results[i + 1] ?`${results[i+1].annualCharges}`:'',
+            // ... other properties
+
+            miscAmount: data.miscAmount,
+            miscDescription: data.miscDescription,
+            feeMonth: data.feeMonth,
+          };
+          usersData.push(userData);
+          i++
+        }
+      }
+
+        const htmlContents = await Promise.all(
+          usersData.map((userData) =>
+            renderEjsTemplate(ejsTemplatePath, { user: userData })
+          )
+          
+        );
+        
+                   if(results.length%2 !== 0)
   {
     const userData = {
       name1: `${results[results.length-1].name}`,
@@ -347,36 +472,54 @@ try {
       annualCharges1:`${results[results.length-1].annualCharges}`,
       miscAmount:data.miscAmount,
       miscDescription:data.miscDescription,
-      feeMonth:data.feeMonth
-
-
-      // Add more dynamic values as needed
+      feeMonth:data.feeMonth   // Add more dynamic values as needed
   };
-  const pdfFilePath = `lastChallan.pdf`;
-  const ejsTemplatePath2 = 'singleChallan.ejs';
-  const htmlContent = await renderEjsTemplate(ejsTemplatePath2, { user: userData });
+  
 
-  await generatePDF(htmlContent, pdfFilePath);
+      const additionalHtmlContent =   renderEjsTemplate(ejsTemplatePath2, { user: userData })
+      htmlContents.pop();
+      htmlContents.push(additionalHtmlContent);
+    
 
-
-  }
-  res.status(200).json("Success");
-} catch (error) {
-  console.error('Error:', error);
 }
-} 
-    }
-    
-  
-});
- 
-
-    
-    
    
-})
- // });
-  
+
+        await generateCombinedPDF(htmlContents, pdfFilePath);
+
+        res.status(200).json('Success');
+      } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+      }
+    }
+  });
+});
+
+async function generateCombinedPDF(htmlContents, pdfFilePath) {
+  // Combine multiple HTML contents into a single HTML string
+  const combinedHtmlContent = `<html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Combined Challan</title>
+      <style>
+        body {
+          width: 100%;
+          margin: 0 auto;
+          margin-left:4em
+        }
+      </style>
+    </head>
+    <body>` +
+    htmlContents.map((content, index) => {
+      return `<div${index !== 0 ? ' style="page-break-before: always;"' : ''}>${content}</div>`;
+    }).join('') +
+    `</body>
+  </html>`;
+
+  // Generate the combined PDF
+  await generatePDF(combinedHtmlContent, pdfFilePath);
+}
 
 const downloadChallan= asyncHandler(async (req, res) => {
   const { fileName } = req.params;

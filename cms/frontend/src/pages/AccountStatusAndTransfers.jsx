@@ -9,7 +9,7 @@ import "./dashboard/Table.scss";
 
 
 
-const AccountStatusAndTransfers = () => {
+const AccountStatusAndHistory = () => {
   const [subtype, setSubtype] = useState("");
   const [type,setType]=useState("")
   const [data,setData]=useState()
@@ -27,7 +27,19 @@ const AccountStatusAndTransfers = () => {
   const [newMonthlyFeeDetails,setNewMonthlyFeeDetails] = useState()
   
   const navigate = useNavigate()
-
+  const currentDate = new
+ 
+  Date();
+  const year = currentDate.getFullYear();
+  const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+  const day = String(currentDate.getDate()).padStart(2,
+   
+  '0');
+  const hours = String(currentDate.getHours()).padStart(2, '0');
+  const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+  const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+  
+  const formattedDate = `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
 useEffect(()=>{
 const fetchStudent=async()=>{
 
@@ -53,42 +65,80 @@ fetchStudent();
     
   return (
     <div className="add-tender">
-   {!details ? <h4>Loading...</h4> :<>
-       
+       <table className="table">
+        <thead>
+          <th>Account Name</th>
+          <th>Account Description</th>
+          <th>Initial Balance</th>
+          <th>Initial Balance Set Time</th>
+          <th>Current Balance</th>
+          <th>Balance Update Time</th>
+
+        </thead>
+        <tbody>
+          <tr>
+               <td>1</td>
+               <td>sss</td>
+               <td>sss</td>
+               <td>sss</td>
+               <td>sss</td>
+               <td>sss</td>
+
+          </tr>
+        </tbody>
+       </table>
+       <h4>Transfer</h4>
      <table className="table">
-          <thead>
-            <th>Sr #</th>
-            <th>Reg No.</th>
-            <th>Student Name</th>
-            <th>Father Name</th>
-            <th>Class</th>
-            <th>Monthlt Tution Fee</th>
-            <th>Previous Due</th>
-            <th>total Amount Due</th>
-            <th>Payment Status</th>
-          </thead>
           <tbody>
-          {details.map((m,index)=>
-          <tr key={index}>
-               <td>{index+1}</td>
-               <td>{m.regNum}</td>
-               <td>{m.name}</td>
-               <td>{m.fName}</td> 
-               <td>{m.classs}</td>
-               <td>{m.MonthlyFeeDetails}</td>
-               <td>{m.previousDue}</td>
-               <td>{m.totalAmountDue}</td>
-               <td>{m.paymentStatus}</td>
-          </tr>)}
+          <tr>
+               <td>Transfer Record Time</td>
+               <td>{formattedDate}</td>  
+          </tr>
+          <tr>
+               <td>Transfer Account From</td>
+               <td><select>
+               <option value="NITB Bank Account">NITB Bank Account</option>
+               <option value="Cash IN Hand Account">Cash IN Hand Account</option>
+               <option value="Fee Collection">Fee Collection</option>
+               </select></td>  
+          </tr>
+          <tr>
+               <td>Transfer Account To</td>
+               <td><select>
+               <option value="NITB Bank Account">NITB Bank Account</option>
+               <option value="Cash IN Hand Account">Cash IN Hand Account</option>
+               <option value="Fee Collection">Fee Collection</option>
+               </select></td>  
+          </tr>
+          <tr>
+               <td>Transfer Amount</td>
+               <td><input /></td>  
+          </tr>
+          <tr>
+               <td>Transfer By</td>
+               <td><input /></td>  
+          </tr>
+          <tr>
+               <td>Authorized By</td>
+               <td><input /></td>  
+          </tr>
+          <tr>
+               <td>Reason For Transfer</td>
+               <td><input /></td>  
+          </tr>
+       
+         
+         
+          
          </tbody>
          </table>
-         </>}
+         <button className="--btn --btn-primary">Submit</button>
       {/* </Card> */}
     </div>
   );
 };
 
-AccountStatusAndTransfers.modules = {
+AccountStatusAndHistory.modules = {
   toolbar: [
     [{ header: "1" }, { header: "2" }, { font: [] }],
     [{ size: [] }],
@@ -104,7 +154,7 @@ AccountStatusAndTransfers.modules = {
     ["clean"],
   ],
 };
-AccountStatusAndTransfers.formats = [
+AccountStatusAndHistory.formats = [
   "header",
   "font",
   "size",
@@ -125,4 +175,4 @@ AccountStatusAndTransfers.formats = [
   "align",
 ];
 
-export default AccountStatusAndTransfers;
+export default AccountStatusAndHistory;

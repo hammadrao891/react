@@ -1,128 +1,70 @@
-import React, { useState, useEffect } from "react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
-import Card from "../components/card/Card";
-import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
+import { getTenders } from "../services/tenderService";
 import "./dashboard/Table.scss";
-
+import { AuthContext } from "../context/AuthContext";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 
 const FeeCollectionByClass = () => {
-  const [subtype, setSubtype] = useState("");
-  const [type,setType]=useState("")
-  const [data,setData]=useState()
-  const [subtypeItem,setSubtypeItem] = useState()
-  const[newItem,setNewItem]= useState()
-  const [quantity, setQuantity] = useState()
-  const [subTypeArray,setSubtypeArray]=useState()
-  const [selectedItem,setSelectedItem] = useState()
-  const [button1,setButton1] = useState(false)
-  const [button2,setButton2] = useState(false)
-  const [regNum,setRegNum] = useState()
-  const [classs,setClasss] = useState()
-  const [table,setTable]=useState(false)
-  const [details,setDetails] = useState()
-  const [newMonthlyFeeDetails,setNewMonthlyFeeDetails] = useState()
-  
-  const navigate = useNavigate()
+  const [tenders, setTenders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [inventory,setInventory] =useState()
+  const [requisitions,setRequisitons] = useState()
+  const {user} = useContext(AuthContext)
+  const navigate = useNavigate();
 
-useEffect(()=>{
-const fetchStudent=async()=>{
-
-    try
-    {
-        const response = await axios({
-            method:"get",
+  useEffect(() => {
+   
+  const fetchStudents =async () => 
+  {
+    try {
+      const response = await axios({
+        method:"get",
         baseURL:"http://localhost:8000/api/",
-        url:`/fee/getStudents`,
-        })
-        console.log(response) 
-        setDetails(response.data)
-    }
-    catch{
-        console.log("err")
-    }
-
+        url:`users/getClassStudents/`,
+        
+      })
+      console.log(response.data)
+      setRequisitons(response.data)
+    } catch (error) {
+      console.log(error)
+      // toast.error("Error")
+  }
+  
+  }
+//   fetchStudents()
+}, []);
+const handleButton1 = () =>
+{
+    navigate("/complete-report-paid-and-unpaid-by-class")
 }
-fetchStudent();
-},[])
 
-    
-    
+const handleButton2 = () =>
+{
+    navigate("/paid-report-by-class")
+}
+const handleButton3 =()=>{
+  navigate("/not-paid-report-by-class")
+}
+
   return (
-    <div className="add-tender">
-   {!details ? <h4>Loading...</h4> :<>
-       
-     <table className="table">
-          <thead>
-            <th>Sr #</th>
-            <th>Reg No.</th>
-            <th>Student Name</th>
-            <th>Father Name</th>
-            <th>Class</th>
-            <th>Monthlt Tution Fee</th>
-            <th>Previous Due</th>
-            <th>total Amount Due</th>
-            <th>Payment Status</th>
-          </thead>
-          <tbody>
-          {details.map((m,index)=>
-          <tr key={index}>
-               <td>{index+1}</td>
-               <td>{m.regNum}</td>
-               <td>{m.name}</td>
-               <td>{m.fName}</td> 
-               <td>{m.classs}</td>
-               <td>{m.MonthlyFeeDetails}</td>
-               <td>{m.previousDue}</td>
-               <td>{m.totalAmountDue}</td>
-               <td>{m.paymentStatus}</td>
-          </tr>)}
-         </tbody>
-         </table>
-         </>}
-      {/* </Card> */}
+    <div>
+      <h3 className="--mt">Student Information</h3>
+    <div style={{display:"flex"}}>
+     <button  className="square-button" onClick={handleButton1}>Complete Report - Paid & Unpaid By Class</button>
+     <button className="square-button" onClick={handleButton2}>Paid Report By Class</button>
+     </div>
+     <div style={{display:"flex"}}>
+     <button className="square-button" onClick={handleButton3}>Not Paid Report By Class</button>
+     </div>
+     
+     
+   
+   
     </div>
   );
 };
-
-FeeCollectionByClass.modules = {
-  toolbar: [
-    [{ header: "1" }, { header: "2" }, { font: [] }],
-    [{ size: [] }],
-    ["bold", "italic", "underline", "strike", "blockquote"],
-    [{ align: [] }],
-    [{ color: [] }, { background: [] }],
-    [
-      { list: "ordered" },
-      { list: "bullet" },
-      { indent: "-1" },
-      { indent: "+1" },
-    ],
-    ["clean"],
-  ],
-};
-FeeCollectionByClass.formats = [
-  "header",
-  "font",
-  "size",
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "blockquote",
-  "color",
-  "background",
-  "list",
-  "bullet",
-  "indent",
-  "link",
-  "video",
-  "image",
-  "code-block",
-  "align",
-];
 
 export default FeeCollectionByClass;
