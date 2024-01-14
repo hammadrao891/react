@@ -9,15 +9,15 @@
   }
   
   .card h4 {
-    font-family: "Impact", sans-serif; /* Bold font */
-    font-weight: 900;
-    font-size: 30px;
+    font-family: system-ui; /* Bold font */
+    font-weight: 500;
+    font-size: 25px;
     margin-bottom: 5px;
     text-align: center; /* Center number within square card */
   }
   
   .card p {
-    font-family: Arial, sans-serif;
+    font-family: Georgia, serif;;
     font-size: 16px;
     line-height: 1.5;
     text-align: center; /* Center text within square card */
@@ -27,17 +27,21 @@
   .tasks
   {
     width: 45%;
+    background-color: #fefefe;
+    padding: 2% ;
   }
   .feeCollection
   {
     margin: 1em;
     padding: 2.5em;
-    width: 100%;
+    width: 98%;
+    background-color: #fefefe;
     // display: flex;
     // justify-content: center;
   }
   .pTasks{
-    background-color:#fa8072;
+    // background-color:#fa8072;
+    
     border-radius:"3em";
     margin-top: .1em;
     padding:.4em;

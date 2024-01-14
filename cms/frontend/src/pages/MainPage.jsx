@@ -71,7 +71,7 @@ const updateFee=async()=>{
 const studentsData = {
     number: 12345,
     text: 'Students',
-    color:"#2ecc71"
+    color:"white"
   };
 
     
@@ -135,7 +135,7 @@ const epxenseData = {
 
     
   return (
-    <div className="">
+    <div className="" style={{display:"grid",gap:"2em"}}>
     <div style={{display:"flex"}}>
      <NewCard {...studentsData} />
      <NewCard {...paidData} />
@@ -146,7 +146,24 @@ const epxenseData = {
      </div>
      <div style={{display:"flex",justifyContent:"space-evenly"}}>
         <Card cardClass={"tasks"}>
-        <h4>Tasks</h4>
+        <h4 style={{color:"#5632f0"}}>Tasks</h4>
+        {/* <table style={{width:"100%"}}>
+          <tr>
+            <td><p>Task 1</p></td>
+            <td><button>Done</button></td>
+          </tr>
+          
+          <tr>
+            <td><p>Task 1</p></td>
+            <td><button>Done</button></td>
+          </tr>
+          
+          <tr>
+            <td><p>Task 1</p></td>
+            <td ><button>Done</button></td>
+          </tr>
+        </table>
+        */}
         <p className="pTasks">Task1</p>
         <p className="pTasks">Task1</p>
         <p className="pTasks">Task1</p>
@@ -154,7 +171,7 @@ const epxenseData = {
         
         </Card>
         <Card cardClass={"tasks"}>
-            <h4>Ongoing Classes</h4>
+            <h4 style={{color:"#5632f0"}}>Ongoing Classes</h4>
             <p className="pTasks">1-Red</p>
         <p className="pTasks">1-Red</p>
         <p className="pTasks">1-Red</p>

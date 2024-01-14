@@ -4,7 +4,7 @@ import { HiMenuAlt3 } from "react-icons/hi";
 import { RiProductHuntLine } from "react-icons/ri";
 import { menuAD, menuEmployee, menuStoreIncharge } from "../../data/sidebar";
 import SidebarItem from "./SidebarItem";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 import { AuthContext } from "../../context/AuthContext";
 import { selectUserType } from "../../redux/features/auth/authSlice";
@@ -19,22 +19,26 @@ const {user}=useContext(AuthContext)
   };
  
   return (
-    <div className="layout">
-      <div className="sidebar" style={{ width: isOpen ? "230px" : "60px" }}>
+    <div className="layout" >
+      <div className="sidebar" style={{ width: "270px" ,borderRadius:"10px",marginTop:"1.8em",marginLeft:"1em"}}>
         <div className="top_section">
           <div className="logo" style={{ display: isOpen ? "block" : "none" }}>
-           <div className="hero-image">
-          IMS
-        </div>   
+          
+           <div className="hero-image" style={{cursor:"pointer"}} onClick={goHome}>
+           {/* <NavLink to="/" > */}
+         <h1 className="sideBarh1"> I M S </h1>
+
+          {/* </NavLink>    */}
+        </div>
             
           </div>
-
-          <div
+          <hr/>
+          {/* <div
             className="bars"
             style={{ marginLeft: isOpen ? "100px" : "0px" }}
           >
-            <HiMenuAlt3 onClick={toggle} />
-          </div>
+            <HiMenuAlt3 color="black" onClick={toggle} />
+          </div> */}
         </div>
         {
         

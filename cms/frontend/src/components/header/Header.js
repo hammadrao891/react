@@ -22,9 +22,9 @@ const Header = () => {
           <span className="--fw-thin">Air Foundation School System Chakwal </span>
           {/* <span className="--color-danger">{name}</span> */}
         </h3>
-        <button onClick={logout} className="--btn --btn-danger">
+        {/* <button onClick={logout} className="--btn --btn-danger">
           Logout
-        </button>
+        </button> */}
       </div>
       <hr />
     </div>

@@ -261,122 +261,7 @@ async function generatePDF(htmlContent, pdfFilePath) {
 
   console.log(`PDF generated successfully at: ${pdfFilePath}`);
 }
-// const generateChallan = asyncHandler(async(req,res)=>{
-//   // const { studentId, month, year } = req.params;
-// const data = req.body;
-// console.log(data)
-  
-// const query = 'SELECT fee.previousDue, fee.totalAmountDue, fee.paymentStatus, students.name, fee.feeMonth,students.fName,students.MonthlyFeeDetails,fee.fine, students.securityDeposit,fee.totalAmountDue,students.regNum, students.classs,students.admissionFee,students.annualCharges FROM fee JOIN students ON fee.regNum = students.regNum;'
-// db.query(query, async(error, results) => {
-//   if (error) {
-//     console.error('Error executing query:', error);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   } else {
-// for (var i = 0 ;i < results.length;i++)
-// {
 
-// try {
-//   const ejsTemplatePath = 'challan.ejs'; // Replace with the actual path
-  
-
-//   const userData = {
-//       name1: `${results[i+1].name}`,
-//       fName1: `${results[i].fName}`,
-//       regNum1: `${results[i].regNum}`,
-//       previousDue1:`${results[i].previousDue}`,
-//       totalAmountDue1:data.MonthlyFeeDetails && data.admissionFee && data.annualCharges ? parseInt(results[i].annualCharges) +parseInt(data.miscAmount) + parseInt(results[i].previousDue) +  parseInt(results[i].MonthlyFeeDetails) + parseInt(results[i].admissionFee) + parseInt(results[i].fine)+ parseInt(results[i].securityDeposit) 
-//       :data.MonthlyFeeDetails ?parseInt(results[i].previousDue) +  parseInt(results[i].MonthlyFeeDetails)  + parseInt(results[i].fine)+ parseInt(results[i].securityDeposit)  
-//       :data.annualCharges ? parseInt(results[i].previousDue) +parseInt(results[i].annualCharges) + parseInt(results[i].fine)+ parseInt(results[i].securityDeposit)+parseInt(data.miscAmount)  
-//       :data.admissionFee && parseInt(results[i].previousDue) +   parseInt(results[i].admissionFee) + parseInt(results[i].fine)+ parseInt(results[i].securityDeposit) +parseInt(data.miscAmount) ,
-//       paymentStatus1:`${results[i].paymentStatus}`,
-//       feeMonth1:`${results[i].feeMonth}`,
-//       tutionFee1:`${results[i].MonthlyFeeDetails}`,
-//       fine1:`${results[i].fine}`,
-//       securityDeposit1:`${results[i].securityDeposit}`,
-//       class1:`${results[i].classs}`,
-//       admissionFee1:`${results[i].admissionFee}`,
-//       annualCharges1:`${results[i].annualCharges}`,
-//       name2: `${results[i+1].name}`,
-//       fName2: `${results[i+1].fName}`,
-//       regNum2: `${results[i+1].regNum}`,
-//       previousDue2:`${results[i+1].previousDue}`,
-//       totalAmountDue2:data.MonthlyFeeDetails && data.admissionFee && data.annualCharges ? parseInt(results[i+1].annualCharges) +parseInt(data.miscAmount) + parseInt(results[i+1].previousDue) +  parseInt(results[i+1].MonthlyFeeDetails) + parseInt(results[i+1].admissionFee) + parseInt(results[i+1].fine)+ parseInt(results[i+1].securityDeposit) 
-//       :data.MonthlyFeeDetails ?parseInt(results[i+1].previousDue) +  parseInt(results[i+1].MonthlyFeeDetails)  + parseInt(results[i+1].fine)+ parseInt(results[i+1].securityDeposit)  
-//       :data.annualCharges ? parseInt(results[i+1].previousDue) +parseInt(results[i+1].annualCharges) + parseInt(results[i+1].fine)+ parseInt(results[i+1].securityDeposit)+parseInt(data.miscAmount)  
-//       :data.admissionFee && parseInt(results[i+1].previousDue) +   parseInt(results[i+1].admissionFee) + parseInt(results[i+1].fine)+ parseInt(results[i+1].securityDeposit) +parseInt(data.miscAmount) ,
-//       paymentStatus2:`${results[i+1].paymentStatus}`,
-//       feeMonth2:`${results[i+1].feeMonth}`,
-//       tutionFee2:`${results[i+1].MonthlyFeeDetails}`,
-//       fine2:`${results[i+1].fine}`,
-//       securityDeposit2:`${results[i+1].securityDeposit}`,
-//       class2:`${results[i+1].classs}`,
-//       admissionFee2:`${results[i+1].admissionFee}`,
-//       annualCharges2:`${results[i+1].annualCharges}`,
-//       miscAmount:data.miscAmount,
-//       miscDescription:data.miscDescription,
-//       feeMonth:data.feeMonth
-
-
-//       // Add more dynamic values as needed
-//   };
-  
-//   const pdfFilePath = `${userData.regNum1}.pdf`;
-//   const htmlContent = await renderEjsTemplate(ejsTemplatePath, { user: userData });
-
-//   await generatePDF(htmlContent, pdfFilePath);
-//   i++
-//   console.log(i)
-//   if(results.length%2 !== 0 && i===results.length-2)
-//   {
-//     const userData = {
-//       name1: `${results[results.length-1].name}`,
-//       fName1: `${results[results.length-1].fName}`,
-//       regNum1: `${results[results.length-1].regNum}`,
-//       previousDue1:`${results[results.length-1].previousDue}`,
-//       totalAmountDue1:data.MonthlyFeeDetails && data.admissionFee && data.annualCharges ? parseInt(results[results.length-1].annualCharges) +parseInt(data.miscAmount) + parseInt(results[results.length-1].previousDue) +  parseInt(results[results.length-1].MonthlyFeeDetails) + parseInt(results[results.length-1].admissionFee) + parseInt(results[results.length-1].fine)+ parseInt(results[results.length-1].securityDeposit) 
-//       :data.MonthlyFeeDetails ?parseInt(results[results.length-1].previousDue) +  parseInt(results[results.length-1].MonthlyFeeDetails)  + parseInt(results[results.length-1].fine)+ parseInt(results[results.length-1].securityDeposit)  
-//       :data.annualCharges ? parseInt(results[results.length-1].previousDue) +parseInt(results[results.length-1].annualCharges) + parseInt(results[results.length-1].fine)+ parseInt(results[results.length-1].securityDeposit)+parseInt(data.miscAmount)  
-//       :data.admissionFee && parseInt(results[results.length-1].previousDue) +   parseInt(results[results.length-1].admissionFee) + parseInt(results[results.length-1].fine)+ parseInt(results[results.length-1].securityDeposit) +parseInt(data.miscAmount) ,
-//       paymentStatus1:`${results[results.length-1].paymentStatus}`,
-//       feeMonth1:`${results[results.length-1].feeMonth}`,
-//       tutionFee1:`${results[results.length-1].MonthlyFeeDetails}`,
-//       fine1:`${results[results.length-1].fine}`,
-//       securityDeposit1:`${results[results.length-1].securityDeposit}`,
-//       class1:`${results[results.length-1].classs}`,
-//       admissionFee1:`${results[results.length-1].admissionFee}`,
-//       annualCharges1:`${results[results.length-1].annualCharges}`,
-//       miscAmount:data.miscAmount,
-//       miscDescription:data.miscDescription,
-//       feeMonth:data.feeMonth
-
-
-//       // Add more dynamic values as needed
-//   };
-//   const pdfFilePath = `lastChallan.pdf`;
-//   const ejsTemplatePath2 = 'singleChallan.ejs';
-//   const htmlContent = await renderEjsTemplate(ejsTemplatePath2, { user: userData });
-
-//   await generatePDF(htmlContent, pdfFilePath);
-
-
-//   }
-//   res.status(200).json("Success");
-// } catch (error) {
-//   console.error('Error:', error);
-// }
-// } 
-//     }
-    
-  
-// });
- 
-
-    
-    
-   
-// })
- // });
-  
  const generateChallan = asyncHandler(async (req, res) => {
   const data = req.body;
   console.log(data);
@@ -534,40 +419,16 @@ const downloadChallan= asyncHandler(async (req, res) => {
 });
 
 const generateAllChallans = asyncHandler(async (req, res) => {
- 
 
-  // const sql = 'SELECT regNum FROM students';
-  // db.query(sql, (err, result) => {
-  //   if (err) {
-  //     console.error('Error retrieving student IDs: ' + err.message);
-  //     return res.status(500).json({ error: 'Internal Server Error' });
-  //   }
-
-  //   // const promises = result.map(row => generateFeeChallan(row.regNum, month, year));
-    
-  //   result.map((m)=> generateFeeChallan(m, 'January', 2022)
-  //   .then((filePath) => {
-  //     console.log(`PDF created successfully: ${filePath}`);
-  //   })
-  //   .catch((err) => {
-  //     console.error('Error generating PDF: ' + err.message);
-  //   })
-  //   )
-  //   // Promise.all(promises)
-    //   .then(() => {
       
     for(var i = 0;i<10;i++ ){
       console.log(i)
       generateFeeChallan("m", 'January', 2022)
     }
         res.status(200).json({ message: 'Fee challans generated for all students' });
-    //   })
-    //   .catch(error => {
-    //     console.error('Error generating fee challans: ' + error.message);
-    //     res.status(500).json({ error: 'Internal Server Error' });
-    //   });
+  
   });
-// });
+
 
 function generateFeeChallan(studentId, month, year) {
   return new Promise((resolve, reject) => {
