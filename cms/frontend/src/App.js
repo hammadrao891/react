@@ -78,6 +78,8 @@ import CompleteReportPaidAndUnpaid from "./pages/CompleteReportPaidAndUnpaidByCl
 import PaidReportByClass from "./pages/PaidReportByClass";
 import NotPaidReportByClass from "./pages/NotPaidReportByClass";
 import MainPage from "./pages/MainPage";
+import TimeTable from "./pages/TimeTable";
+import UpdateTimeTable from "./pages/updateTimeTable";
 
 axios.defaults.withCredentials = true;
 
@@ -85,14 +87,6 @@ function App() {
   const {user} = useContext(AuthContext)
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    localStorage.removeItem("user")
-    async function loginStatus() {
-      const status = await getLoginStatus();
-      dispatch(SET_LOGIN(status));
-    }
-    loginStatus();
-  }, [dispatch]);
 
   return (
     <BrowserRouter>
@@ -104,6 +98,28 @@ function App() {
             <Sidebar>
               <Layout>
                 <AddInventory />
+              </Layout>
+            </Sidebar>
+          }
+          
+        />
+        <Route
+          path="/timetable"
+          element={
+            <Sidebar>
+              <Layout>
+                <TimeTable />
+              </Layout>
+            </Sidebar>
+          }
+          
+        />
+        <Route
+          path="/update-timetable"
+          element={
+            <Sidebar>
+              <Layout>
+                <UpdateTimeTable />
               </Layout>
             </Sidebar>
           }

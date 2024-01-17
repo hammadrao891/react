@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import './TimeTable.css'; // Import your CSS file
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom';
 
-const TimeTable = () => {
+const UpdateTimeTable = () => {
   const [classes,setClasses] = useState()
   const [timetable, setTimetable] = useState([]);
   const [addedEvents, setAddedEvents] = useState([]);
   const [tableData, setTableData] = useState({});
-
+    const [updatedClasses,setUpdatedClasses] = useState()
   // Function to handle click on th or td
   const handleClick = (key, value) => {
     setTableData((prevData) => ({
@@ -15,6 +16,7 @@ const TimeTable = () => {
       [key]: value,
     }));
   };
+
 
 
   useEffect(()=>{
@@ -31,6 +33,32 @@ const TimeTable = () => {
     }
     getClasses()
   },[])
+  const  handleChange = (e,index) =>{
+    const {name,value,key} = e.target;
+    
+    const updatedClasses = classes.filter((classObj) => classObj.class_id !== index);
+    updatedClasses.push({class_id:index,class_name:value})
+    // arr[index]=value
+    setUpdatedClasses(updatedClasses)
+    // setClasses(updatedClasses);
+    
+    // console.log(name,value)
+    // setStudentData({ ...studentData, [name]:value });
+  }
+  const handleUpdate = async(e)=>{
+    console.log(updatedClasses)
+       await axios(
+        {
+          method:"put",
+          baseURL:'http://localhost:8000/api/',
+          url:"timeTable/classes/monday",
+          data:updatedClasses
+        }
+      )
+      alert("Updated")
+    //   navigate(`/update-options`);
+
+    }
   return (
     <div className="timetable-container">
       <table className="table">
@@ -48,8 +76,8 @@ const TimeTable = () => {
      
       <tr>
         <td><span style={{fontWeight:900}}>Monday</span></td>
-       {classes && classes.map((m)=>
-        <td>{m.class_name}</td>
+       {classes && classes.map((m,index)=>
+        <td><input placeholder={m.class_name} onChange={e=>handleChange(e,m.class_id)} key={index}/></td>
         )}
 
       </tr>
@@ -101,8 +129,9 @@ const TimeTable = () => {
         <td>Physics</td>
       </tr>
  </table>
+ <button onClick={handleUpdate}>Update</button>
     </div>
   );
 };
 
-export default TimeTable;
+export default UpdateTimeTable;

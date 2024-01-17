@@ -3,6 +3,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const userRoute = require("./routes/userRoute");
 const feeRoute = require("./routes/feeRoute");
+const timeTableRoute = require("./routes/timeTableRouter");
+
 const cookieParser = require("cookie-parser");
 const cors = require("cors")
 const app = express();
@@ -24,6 +26,7 @@ app.use(bodyParser.json());
 // Routes Middleware
 app.use("/api/users", userRoute);
 app.use("/api/fee",feeRoute)
+app.use("/api/timeTable",timeTableRoute)
 
 // Routes
 app.get("/", (req, res) => {

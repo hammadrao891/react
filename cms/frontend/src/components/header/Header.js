@@ -5,9 +5,6 @@ import { selectName, SET_LOGIN } from "../../redux/features/auth/authSlice";
 import { logoutUser } from "../../services/authService";
 
 const Header = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const name = useSelector(selectName);
 
   const logout = async () => {
     // navigate("/login");
