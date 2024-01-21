@@ -3,10 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../components/loader/Loader";
 import TenderForm from "../../components/tender/tenderForm/TenderForm";
-import { createTender } from "../../services/tenderService";
-import {
-  selectIsLoading,
-} from "../../redux/features/tender/tenderSlice";
+
 import axios from "axios";
 
 const initialState = {
@@ -33,7 +30,7 @@ const AddTender = () => {
   // const [description, setDescription] = useState("");
   // const [file, setFile] = useState(null);
 
-  const isLoading = useSelector(selectIsLoading);
+  // const isLoading = useSelector(selectIsLoading);
 
   const { year, type, subtype, otherSubType, description, tenderNo, publishedDate, publishedIn} = tender;
 
@@ -132,9 +129,9 @@ const AddTender = () => {
     console.log("Tender data in AddTender.js: ")
     console.log(tenderData);
 
-    const data = await createTender(tenderData)
+    // const data = await createTender(tenderData)
     console.log("Created tender (AddTender.js)")
-    console.log(data);
+    // console.log(data);
     //await dispatch(createTender(tenderData));
 
     navigate("/dashboard");
@@ -142,7 +139,7 @@ const AddTender = () => {
 
   return (
     <div>
-      {isLoading && <Loader />}
+      {/* {isLoading && <Loader />} */}
       <h3 className="--mt">Add New Tender</h3>
       <TenderForm
         tender={tender}

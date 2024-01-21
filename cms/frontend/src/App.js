@@ -1,7 +1,6 @@
 import { useContext, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/auth/Login";
-import Register from "./pages/auth/Register";
 import Forgot from "./pages/auth/Forgot";
 import Reset from "./pages/auth/Reset";
 import Dashboard from "./pages/dashboard/Dashboard";
@@ -10,23 +9,7 @@ import Layout from "./components/layout/Layout";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useDispatch } from "react-redux";
-import { getLoginStatus } from "./services/authService";
-import { SET_LOGIN } from "./redux/features/auth/authSlice";
 import AddTender from "./pages/addTender/AddTender";
-import TenderDetail from "./components/tender/tenderDetail/TenderDetail";
-import EditTender from "./pages/editTender/EditTender";
-import Profile from "./pages/profile/Profile";
-import EditProfile from "./pages/profile/EditProfile";
-import AddVendor from "./pages/addTender/AddVendor";
-import AddCategory from "./pages/addTender/AddCategory";
-import AddEmployee from "./pages/addEmployee/AddEmployee";
-import { AuthContext } from "./context/AuthContext";
-import AddInventory from "./pages/AddInventory";
-import AddRequisition from "./pages/AddRequisition";
-import Inventory from "./pages/Inventory";
-import ManageRequisition from "./pages/ManageRequisition";
-import ApproveRequisitions from "./pages/ApproveRequisitions";
 import AddStudent from "./pages/AddStudent";
 import StudentInfo from "./pages/StudentInfo";
 import CheckStudentInfo from "./pages/CheckStudentInfo";
@@ -80,35 +63,34 @@ import NotPaidReportByClass from "./pages/NotPaidReportByClass";
 import MainPage from "./pages/MainPage";
 import TimeTable from "./pages/TimeTable";
 import UpdateTimeTable from "./pages/updateTimeTable";
+import CreateTimeTable from "./pages/CreateTimetable";
 
 axios.defaults.withCredentials = true;
 
 function App() {
-  const {user} = useContext(AuthContext)
-  const dispatch = useDispatch();
-
 
   return (
     <BrowserRouter>
       {/* <ToastContainer /> */}
       <Routes>
-      <Route
-          path="/add-inventory"
-          element={
-            <Sidebar>
-              <Layout>
-                <AddInventory />
-              </Layout>
-            </Sidebar>
-          }
-          
-        />
+     
         <Route
           path="/timetable"
           element={
             <Sidebar>
               <Layout>
                 <TimeTable />
+              </Layout>
+            </Sidebar>
+          }
+          
+        />
+            <Route
+          path="/create-timetable"
+          element={
+            <Sidebar>
+              <Layout>
+                <CreateTimeTable />
               </Layout>
             </Sidebar>
           }
@@ -680,57 +662,13 @@ function App() {
             </Sidebar>
           }
         />
-         <Route
-          path="/inventory"
-          element={
-            <Sidebar>
-              <Layout>
-                <Inventory />
-              </Layout>
-            </Sidebar>
-          }
-        />
-         <Route
-          path="/manage-requisition"
-          element={
-            <Sidebar>
-              <Layout>
-                <ManageRequisition />
-              </Layout>
-            </Sidebar>
-          }
-        />
-         <Route
-          path="/approve-requisitions"
-          element={
-            <Sidebar>
-              <Layout>
-                <ApproveRequisitions />
-              </Layout>
-            </Sidebar>
-          }
-        />
-        <Route
-          path="/add-requisition"
-          element={
-            <Sidebar>
-              <Layout>
-                <AddRequisition />
-              </Layout>
-            </Sidebar>
-          }
-        />
         <Route path="/" element={ <Sidebar>
               <Layout>
                 <MainPage />
               </Layout>
             </Sidebar> } />
-       <Route path="/login" element={user ? <Sidebar>
-              <Layout>
-                <Dashboard />
-              </Layout>
-            </Sidebar> : <Login />}> </Route>
-        <Route path="/register" element={<Register />} />
+    
+        {/* <Route path="/register" element={<Register />} /> */}
         {/* <Route path="/add-employee" element={<AddEmployee />} /> */}
         <Route path="/forgot" element={<Forgot />} />
         <Route path="/resetpassword/:resetToken" element={<Reset />} />
@@ -755,68 +693,7 @@ function App() {
             </Sidebar>
           }
         />
-         {  user && user.userType === "AD" &&
-          <Route
-          path="/add-employee"
-          element={
-            <Sidebar>
-              <Layout>
-                <AddEmployee />
-              </Layout>
-            </Sidebar>
-          }
-        />}
-        <Route
-          path="/add-vendor"
-          element={
-            <Sidebar>
-              <Layout>
-                <AddVendor />
-              </Layout>
-            </Sidebar>
-          }
-        />
-        <Route
-          path="/add-category"
-          element={
-            <Sidebar>
-              <Layout>
-                <AddCategory />
-              </Layout>
-            </Sidebar>
-          }
-        />
-        <Route
-          path="/tender-detail/:id"
-          element={
-            <Sidebar>
-              <Layout>
-                <TenderDetail />
-              </Layout>
-            </Sidebar>
-          }
-        />
-        <Route
-          path="/edit-tender/:id"
-          element={
-            <Sidebar>
-              <Layout>
-                <EditTender />
-              </Layout>
-            </Sidebar>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <Sidebar>
-              <Layout>
-                <Profile />
-              </Layout>
-            </Sidebar>
-          }
-        />
-      
+        
         
       </Routes>
     </BrowserRouter>

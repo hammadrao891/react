@@ -1,18 +1,23 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import './TimeTable.css'; // Import your CSS file
 import axios from 'axios'
-import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from "react-toastify";
 
-const UpdateTimeTable = () => {
-  const [classes,setClasses] = useState()
+const CreateTimeTable = () => {
+  const[monday,setMonday]=useState([])
+  const[tuesday,setTuesday]=useState([])
+  const[wednesday,setWednesday]=useState([])
+  const[thursday,setThursday]=useState([])
+  const[friday,setFriday]=useState([])
   const [timetable, setTimetable] = useState([]);
   const [addedEvents, setAddedEvents] = useState([]);
+  const[classes,setClasses]=useState()
   const [tableData, setTableData] = useState({});
-  const[classs,setClasss] = useState()
+  const[classs,setClasss]=useState()
   const[toggle,setToggle]=useState(false)
+  const navigate=useNavigate()
     const [updatedClasses,setUpdatedClasses] = useState()
-    const navigate = useNavigate()
   // Function to handle click on th or td
   const handleClick = (key, value) => {
     setTableData((prevData) => ({
@@ -23,31 +28,23 @@ const UpdateTimeTable = () => {
 
 
 
-  let updatedClassess = useMemo(() => {
-    // Initialize the array here
-    return []
-  }, []); 
-  const  handleChange = (e,index) =>{
+  const  handleChange = (e,index,day) =>{
     const {name,value,key} = e.target;
     
-    // updatedClassess = classes.filter((classObj) => classObj.class_id !== index);
-    // updatedClassess.push({class_id:index,class_name:value})
-    // console.log(updatedClassess)
-
-    const indexToUpdateExists =updatedClassess?.some(subarray => subarray.class_id === index);
+    const indexToUpdateExists =day?.some(subarray => subarray.class_id === index);
 
 if (indexToUpdateExists) {
     // Update the existing subarray
-   updatedClassess.forEach(subarray => {
+   day.forEach(subarray => {
         if (subarray.class_id === index) {
             subarray.class_name = e.target.value;
         }
     });
 } else {
     // Push a new subarray
-   updatedClassess.push({class_id:index , class_name:e.target.value});
+   day.push({class_id:index , class_name:e.target.value});
 }
-console.log(updatedClassess)
+console.log(day)
 
 
     // arr[index]=value
@@ -56,59 +53,73 @@ console.log(updatedClassess)
     
     // console.log(name,value)
     // setStudentData({ ...studentData, [name]:value });
+  
   }
-  const handleUpdate = async(e)=>{
-    console.log(updatedClasses)
+  const handleSave = async(e)=>{
+    // setMonday(monday.map(subarray => subarray.class_name))
+    // tuesday.map(subarray => subarray.slice(1));
+    // wednesday.map(subarray => subarray.slice(1));
+    // thursday.map(subarray => subarray.slice(1));
+    // friday.map(subarray => subarray.slice(1));
+const data={
+  Monday:monday.map(subarray => subarray.class_name)
+}
+
+    console.log(data)
        await axios(
         {
-          method:"put",
+          method:"post",
           baseURL:'http://localhost:8000/api/',
-          url:"timeTable/classes/monday",
-          data:updatedClassess
+          url:"/timeTable/insert-classes",
+          data:{
+            classs,
+            Monday:monday.map(subarray => subarray.class_name),
+            Tuesday:tuesday.map(subarray => subarray.class_name),
+            Wednesday:wednesday.map(subarray => subarray.class_name),
+            Thursday:thursday.map(subarray => subarray.class_name),
+            Friday:friday.map(subarray => subarray.class_name)
+          }
         }
       )
-      
-      toast.success("Timetable Updated Successfully")
+      // alert("Updated")
+      toast.success("Timetable Created Successfully")
       setTimeout(() => {
         navigate(`/timetable`);
       }, 2000); 
 
-      // alert("Updated")
-    //   navigate(`/update-options`);
-
     }
-    const getClasses = async(e) =>{
-      setClasss(e.target.value)
-      const response = await axios(
+    const handleClass = async(e)=>{
+      try
+      {
+        const response=await axios(
         {
           method:"get",
           baseURL:'http://localhost:8000/api/',
-          url:`timeTable/classes/${e.target.value}`
+          url:`/timeTable/classes/${e.target.value}`,
         }
       )
-      if(response.data.classes.Monday)
-      {
-        setClasses(response.data.classes)
-        console.log(response.data)
-        setToggle(true)
-      }
-      else
-      {
-        alert("Class Timetable Not Found!")
-        setToggle(false)
-      }
+    console.log(response.data)
+    if(!response.data.classes.Monday)
+    {
+    setClasses(response.data.classes)
+    setToggle(true)
+      }else
+    {
+      setToggle(false)
+      alert("Class Timetable Already Exists")
       
+    }    
+  }
+  
+      catch{}
     }
-
   return (
     <div className="timetable-container">
-     <ToastContainer/>
-     
- <div className="" style={{width:"100em"}} >
-                <div class="timetable-img text-center">
-                <h2>Update TimeTable</h2>               
-  <label style={{color:"black",fontSize:"large"}}>Select Class:</label>
-        <select style={{fontSize:"small"}} onChange={e=>getClasses(e)} name="classs" >
+    <ToastContainer/>
+    <div class="timetable-img text-center">
+    <h2>Create TimeTable</h2>
+      <label style={{color:"black",fontSize:"small"}}>Select Class:</label>
+        <select onChange={e=>handleClass(e)} name="classs" >
             <option>--select class--</option>
             <option value="Play Group">Play Group</option>
             <option value="Nursery Green">Nursery Green</option>
@@ -132,9 +143,14 @@ console.log(updatedClassess)
             <option value="7-Red">7-Red</option>
             
         </select>
- 
+        </div>
+        {/* {classes && <h4>{classes.monday[0]}</h4>} */}
+       {
+        toggle && 
+ <div className="" style={{width:"100em"}} >
+                <div class="timetable-img text-center">
+                    <img src="img/content/timetable.png" alt=""/>
                 </div>
-  {toggle && <>
                 <div class="table-responsive">
                     <table class="tableL table-bordered text-center w-100" style={{width:"20%"}}>
                         <thead>
@@ -153,51 +169,56 @@ console.log(updatedClassess)
                         <tbody>
                         <tr>
                           <td className='align-middle text-primary'>Monday</td>
-                          {classes && classes.Monday.map((m,index)=>
-        <td><input placeholder={m.class_name} onChange={e=>handleChange(e,m.class_id)} key={index}/></td>
-        )}
+                            {Array.from({ length: 7 }, (_, index) => (
+                                  <>
+                                  <td><input placeholder={''}  key={index} onChange={e=>handleChange(e,index,monday)}/></td>           
+                          </>
+                          ))}
 
                         </tr>
                         <tr>
                           <td className='align-middle text-primary'>Tuesday</td>
-                        {classes && classes.Tuesday.map((m,index)=>
-                         <td><input placeholder={m.class_name} onChange={e=>handleChange(e,m.class_id)} key={index}/></td>
-                          )}
-
-                        </tr>
+                          {Array.from({ length: 7 }, (_, index) => (
+                            <>
+                            <td><input placeholder={''}  key={index} onChange={e=>handleChange(e,index,tuesday)}/></td>           
+                            </>
+                          ))}
+                                </tr>
                         <tr>
                           <td className='align-middle text-primary'>Wednesday</td>
-                        {classes && classes.Wednesday.map((m,index)=>
-                         <td><input placeholder={m.class_name} onChange={e=>handleChange(e,m.class_id)} key={index}/></td>
-                          )}
-
-                        </tr>
+                          {Array.from({ length: 7 }, (_, index) => (
+                            <>
+                            <td><input placeholder={''}  onChange={e=>handleChange(e,index,wednesday)} key={index}/></td>           
+                          </>
+                        ))}
+                              </tr>
                         <tr>
                           <td className='align-middle text-primary'>Thursday</td>
-                        {classes && classes.Thursday.map((m,index)=>
-                         <td><input placeholder={m.class_name} onChange={e=>handleChange(e,m.class_id)} key={index}/></td>
-                          )}
-
-                        </tr>
+                          {Array.from({ length: 7 }, (_, index) => (
+                              <>
+                              <td><input placeholder={''}  onChange={e=>handleChange(e,index,thursday)} key={index}/></td>           
+                            </>
+                          ))}
+                              </tr>
                         <tr>
                           <td className='align-middle text-primary'>Friday</td>
-                        {classes && classes.Friday.map((m,index)=>
-                         <td><input placeholder={m.class_name} onChange={e=>handleChange(e,m.class_id)} key={index}/></td>
-                          )}
-
+                          {Array.from({ length: 7 }, (_, index) => (
+                                    <>
+                                    <td><input placeholder={''}  onChange={e=>handleChange(e,index,friday)}  key={index}/></td>           
+                            </>
+                          ))}
                         </tr>
  
-                          </tbody>
+                            
+                        </tbody>
                     </table>
-                </div>
-                <button  className="--btn --btn-success" onClick={handleUpdate}>Update</button>
-                </>}
+  
+                    <button  className="--btn --btn-success" onClick={handleSave}>Create</button>              </div>
             </div>
-            
-
+}
  
     </div>
   );
 };
 
-export default UpdateTimeTable;
+export default CreateTimeTable;

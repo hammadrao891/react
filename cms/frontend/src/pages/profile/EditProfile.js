@@ -1,32 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Card from "../../components/card/Card";
 import Loader from "../../components/loader/Loader";
-import { selectUser } from "../../redux/features/auth/authSlice";
 import "./Profile.scss";
 import { toast } from "react-toastify";
-import { updateUser } from "../../services/authService";
 import ChangePassword from "../../components/changePassword/ChangePassword";
 
 const EditProfile = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const user = useSelector(selectUser);
-  const { email } = user;
+  // const { email } = user;
 
-  useEffect(() => {
-    if (!email) {
-      navigate("/profile");
-    }
-  }, [email, navigate]);
+  // useEffect(() => {
+    // if (!email) {
+    //   navigate("/profile");
+    // }
+  // }, [email, navigate]);
 
   const initialState = {
-    name: user?.name,
-    email: user?.email,
-    phone: user?.phone,
-    bio: user?.bio,
-    photo: user?.photo,
+    // name: user?.name,
+    // email: user?.email,
+    // phone: user?.phone,
+    // bio: user?.bio,
+    // photo: user?.photo,
   };
   const [profile, setProfile] = useState(initialState);
   const [profileImage, setProfileImage] = useState("");
@@ -73,8 +69,8 @@ const EditProfile = () => {
           photo: profileImage ? imageURL : profile.photo,
         };
 
-        const data = await updateUser(formData);
-        console.log(data);
+        // const data = await updateUser(formData);
+        // console.log(data);
         toast.success("User updated");
         navigate("/profile");
         setIsLoading(false);
@@ -92,7 +88,7 @@ const EditProfile = () => {
 
       <Card cardClass={"card --flex-dir-column"}>
         <span className="profile-photo">
-          <img src={user?.photo} alt="profilepic" />
+          {/* <img src={user?.photo} alt="profilepic" /> */}
         </span>
         <form className="--form-control --m" onSubmit={saveProfile}>
           <span className="profile-data">

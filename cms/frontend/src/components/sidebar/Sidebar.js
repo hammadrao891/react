@@ -7,8 +7,7 @@ import SidebarItem from "./SidebarItem";
 import { NavLink, useNavigate } from "react-router-dom";
 
 import { AuthContext } from "../../context/AuthContext";
-import { selectUserType } from "../../redux/features/auth/authSlice";
-import { useSelector } from "react-redux";
+
 const Sidebar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
   const toggle = () => setIsOpen(!isOpen);

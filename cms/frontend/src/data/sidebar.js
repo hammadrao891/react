@@ -40,6 +40,12 @@ export const menuAD = [
     icon: <GrMoney />,
     path: "/expenses",
   },
+  
+  {
+    title: "Timetable",
+    icon: <BiImageAdd />,
+    path: "/timetable",
+  },
   {
     title: "Backup File",
     icon: <MdBackup />,
@@ -47,52 +53,4 @@ export const menuAD = [
   },
 ];
 
-export const menuEmployee = [
-  {
-    title: "Dashboard",
-    icon: <FaTh />,
-    path: "/dashboard",
-  },
-  {
-    title: "Requisition",
-    icon: <BiImageAdd />,
-    path: "/add-requisition", 
-  }
-  
- 
-];
-export const menuStoreIncharge = [
-  {
-    title: "Dashboard",
-    icon: <FaTh />,
-    path: "/dashboard",
-  },
-  {
-    title: "Add Tender",
-    icon: <BiImageAdd />,
-    path: "/add-tender",
-  },
-  {
-    title: "Add Vendor",
-    icon: <BiImageAdd />,
-    path: "/add-vendor",
-  },
-  
-  {
-    title: "Requisitions",
-    icon: <BiImageAdd />,
-    path: "/manage-requisition",
-  },
-  {
-    title: "Add Category",
-    icon: <BiImageAdd />,
-    path: "/add-category",
-  },
-  {
-    title: "Add Inventory",
-    icon: <BiImageAdd />,
-    path: "/add-inventory",
-  },
- 
-];
 
