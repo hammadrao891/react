@@ -85,6 +85,17 @@ function App() {
           }
           
         />
+        <Route
+          path="/add-teacher"
+          element={
+            <Sidebar>
+              <Layout>
+                <TimeTable />
+              </Layout>
+            </Sidebar>
+          }
+          
+        />
             <Route
           path="/create-timetable"
           element={

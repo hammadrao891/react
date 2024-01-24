@@ -27,13 +27,28 @@ const UpdateTimeTable = () => {
     // Initialize the array here
     return []
   }, []); 
-  const  handleChange = (e,index) =>{
+  const checkClassConflict=async(class_name,classs,dayToCheck)=>{
+    const response=await axios({
+        method:"post",
+        baseURL:"http://localhost:8000/api/",
+        url:"timeTable/check-class-match",
+        data:{
+            classs,
+            class_name,
+            dayToCheck
+        }
+        
+    })
+    return response.data
+  }
+  const  handleChange = async(e,index,day) =>{
+    const classMatch=await checkClassConflict(e.target.value,classs,day)
+    if(classMatch.match)
+    alert(classMatch.message)
+    else{
     const {name,value,key} = e.target;
     
-    // updatedClassess = classes.filter((classObj) => classObj.class_id !== index);
-    // updatedClassess.push({class_id:index,class_name:value})
-    // console.log(updatedClassess)
-
+  
     const indexToUpdateExists =updatedClassess?.some(subarray => subarray.class_id === index);
 
 if (indexToUpdateExists) {
@@ -48,14 +63,8 @@ if (indexToUpdateExists) {
    updatedClassess.push({class_id:index , class_name:e.target.value});
 }
 console.log(updatedClassess)
+    }
 
-
-    // arr[index]=value
-    // setUpdatedClasses(updatedClasses)
-    // setClasses(updatedClasses);
-    
-    // console.log(name,value)
-    // setStudentData({ ...studentData, [name]:value });
   }
   const handleUpdate = async(e)=>{
     console.log(updatedClasses)
@@ -154,35 +163,79 @@ console.log(updatedClassess)
                         <tr>
                           <td className='align-middle text-primary'>Monday</td>
                           {classes && classes.Monday.map((m,index)=>
-        <td><input placeholder={m.class_name} onChange={e=>handleChange(e,m.class_id)} key={index}/></td>
+        <td>
+        <select onChange={e=>handleChange(e,m.class_id,"Monday")} key={index}>
+        <option>--select teacher--</option>
+        <option value="Sir Aleem">Sir Aleem</option>
+        <option value="Mam Rafia">Mam Rafia</option>
+        <option value="Sir Adeel">Sir Adeel</option>
+        <option value="Mam Joddat">Mam Joddat</option>
+        </select>
+        {/* <input placeholder={m.class_name} onChange={e=>handleChange(e,m.class_id)} key={index}/> */}
+        </td>
         )}
 
                         </tr>
                         <tr>
                           <td className='align-middle text-primary'>Tuesday</td>
                         {classes && classes.Tuesday.map((m,index)=>
-                         <td><input placeholder={m.class_name} onChange={e=>handleChange(e,m.class_id)} key={index}/></td>
+                         <td>
+                         <select onChange={e=>handleChange(e,m.class_id,"Monday")} key={index}>
+                        <option>--select teacher--</option>
+                        <option value="Sir Aleem">Sir Aleem</option>
+                        <option value="Mam Rafia">Mam Rafia</option>
+                        <option value="Sir Adeel">Sir Adeel</option>
+                        <option value="Mam Joddat">Mam Joddat</option>
+                        </select>
+                         {/* <input placeholder={m.class_name} onChange={e=>handleChange(e,m.class_id)} key={index}/> */}
+                         </td>
                           )}
 
                         </tr>
                         <tr>
                           <td className='align-middle text-primary'>Wednesday</td>
                         {classes && classes.Wednesday.map((m,index)=>
-                         <td><input placeholder={m.class_name} onChange={e=>handleChange(e,m.class_id)} key={index}/></td>
+                         <td>
+                         <select onChange={e=>handleChange(e,m.class_id,"Monday")} key={index}>
+        <option>--select teacher--</option>
+        <option value="Sir Aleem">Sir Aleem</option>
+        <option value="Mam Rafia">Mam Rafia</option>
+        <option value="Sir Adeel">Sir Adeel</option>
+        <option value="Mam Joddat">Mam Joddat</option>
+        </select>
+                         {/* <input placeholder={m.class_name} onChange={e=>handleChange(e,m.class_id)} key={index}/> */}
+                         </td>
                           )}
 
                         </tr>
                         <tr>
                           <td className='align-middle text-primary'>Thursday</td>
                         {classes && classes.Thursday.map((m,index)=>
-                         <td><input placeholder={m.class_name} onChange={e=>handleChange(e,m.class_id)} key={index}/></td>
+                         <td>
+                         <select onChange={e=>handleChange(e,m.class_id,"Monday")} key={index}>
+        <option>--select teacher--</option>
+        <option value="Sir Aleem">Sir Aleem</option>
+        <option value="Mam Rafia">Mam Rafia</option>
+        <option value="Sir Adeel">Sir Adeel</option>
+        <option value="Mam Joddat">Mam Joddat</option>
+        </select>
+                         {/* <input placeholder={m.class_name} onChange={e=>handleChange(e,m.class_id)} key={index}/> */}
+                         </td>
                           )}
 
                         </tr>
                         <tr>
                           <td className='align-middle text-primary'>Friday</td>
                         {classes && classes.Friday.map((m,index)=>
-                         <td><input placeholder={m.class_name} onChange={e=>handleChange(e,m.class_id)} key={index}/></td>
+                         <td><select onChange={e=>handleChange(e,m.class_id,"Monday")} key={index}>
+        <option>--select teacher--</option>
+        <option value="Sir Aleem">Sir Aleem</option>
+        <option value="Mam Rafia">Mam Rafia</option>
+        <option value="Sir Adeel">Sir Adeel</option>
+        <option value="Mam Joddat">Mam Joddat</option>
+        </select>
+                         {/* <input placeholder={m.class_name} onChange={e=>handleChange(e,m.class_id)} key={index}/> */}
+                         </td>
                           )}
 
                         </tr>

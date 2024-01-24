@@ -40,6 +40,7 @@ setToggle(true)
       <div style={{display:"flex",justifyContent:"space-between"}}>
       <button   onClick={ ()=>navigate("/update-timetable")} className="--btn --btn-success">Update TimeTable</button>
       <button   onClick={ ()=>navigate("/create-timetable")} className="--btn --btn-success">Create TimeTable</button></div>
+      <button  onClick={ ()=>navigate("/add-teacher")} className="--btn --btn-success">Add Teacher</button>
       </div>
  <div class="" style={{width:"100em"}}  >
  
@@ -82,43 +83,43 @@ setToggle(true)
                                 <th class="text-uppercase text-primary">7:40</th>
                                 <th class="text-uppercase text-primary">8:20</th>
                                 <th class="text-uppercase text-primary">9:00</th>
+                                <th class="text-uppercase text-primary">9:40</th>
                                 <th class="text-uppercase text-primary">10:40</th>
                                 <th class="text-uppercase text-primary">11:20</th>
-                                <th class="text-uppercase text-primary">12:00</th>
                             </tr>
                         </thead>
                         <tbody>
                         <tr>
                           <td className='align-middle text-primary'>Monday</td>
-                        {classes && classes.Monday.map((m)=>
+                        {classes && classes.Monday?.map((m)=>
                            <td><span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">{m.class_name}</span></td>
                           )}
 
                         </tr>
                         <tr>
                           <td className='align-middle text-primary'>Tuesday</td>
-                        {classes && classes.Tuesday.map((m)=>
+                        {classes && classes.Tuesday?.map((m)=>
                           <td><span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">{m.class_name}</span></td>
                           )}
 
                         </tr>
                         <tr>
                           <td className='align-middle text-primary'>Wednesday</td>
-                        {classes && classes.Wednesday.map((m)=>
+                        {classes && classes.Wednesday?.map((m)=>
                           <td><span class="bg-sky padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">{m.class_name}</span></td>
                           )}
 
                         </tr>
                         <tr>
                           <td className='align-middle text-primary'>Thursday</td>
-                        {classes && classes.Thursday.map((m)=>
+                        {classes && classes.Thursday?.map((m)=>
                           <td><span class="bg-purple padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">{m.class_name}</span></td>
                           )}
 
                         </tr>
                         <tr>
                           <td className='align-middle text-primary'>Friday</td>
-                        {classes && classes.Friday.map((m)=>
+                        {classes && classes.Friday?.map((m)=>
                           <td><span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">{m.class_name}</span></td>
                           )}
 

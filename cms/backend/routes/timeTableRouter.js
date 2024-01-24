@@ -104,7 +104,7 @@ router.put('/classes/monday',(req,res)=>{
     // });
     const classs = req.params.classs;
 
-    const query = 'SELECT class_id, class_name, day FROM classes WHERE classs = ?';
+    const query = 'SELECT class_id, class_name, day,time_slot FROM classes WHERE classs = ?';
     db.query(query, [classs], (err, results) => {
       if (err) {
         console.error('Error executing MySQL query:', err);
@@ -113,14 +113,14 @@ router.put('/classes/monday',(req,res)=>{
         const organizedClasses = {};
   
         results.forEach((result) => {
-          const { class_id, class_name, day } = result;
+          const { class_id, class_name, day,time_slot } = result;
   
           // Create an array for the day if it doesn't exist
           if (!organizedClasses[day]) {
             organizedClasses[day] = [];
           }
   
-          organizedClasses[day].push({ class_id, class_name });
+          organizedClasses[day].push({ class_id, class_name,time_slot });
         });
   
         res.json({ classes: organizedClasses });
@@ -130,23 +130,100 @@ router.put('/classes/monday',(req,res)=>{
 
   router.post('/insert-classes', (req, res) => {
     const { classs, ...classData } = req.body;
-  console.log(req.body)
+console.log(classs)
     // Extract day, class_name, and classs from the req.body and insert into classes table
     for (const day of Object.keys(classData)) {
-      const classesArray = (classData[day]);
-      for (const className of classesArray) {
-        const insertQuery = 'INSERT INTO classes (class_name, day, classs) VALUES (?, ?, ?)';
-        const values = [className, day, classs];
+        const classesArray = classData[day];
+        for (const [className, time_slot] of classesArray) {
+            const insertQuery = 'INSERT INTO classes (class_name, day, classs, time_slot) VALUES (?, ?, ?, ?)';
+            const values = [className, day, classs, time_slot];
+
+            db.query(insertQuery, values, (err, results) => {
+                if (err) {
+                    console.error('Error inserting into classes table:', err);
+                    res.status(500).json({ error: 'Internal Server Error' });
+                }
+            });
+        }
+    }
+
+    res.json({ message: 'Classes inserted successfully' });
+});
+router.post('/check-class-match', (req, res) => {
+  const { classs, class_name ,dayToCheck,time_slot} = req.body;
   
-        db.query(insertQuery, values, (err, results) => {
-          if (err) {
-            console.error('Error inserting into classes table:', err);
-            res.status(500).json({ error: 'Internal Server Error' });
+
+  // Check if the specified class_name for Monday matches with any other class_name for Monday
+  const selectQuery = 'SELECT * FROM classes WHERE day = ? AND class_name = ? AND time_slot=?';
+  const values = [dayToCheck, class_name, time_slot ];
+
+  db.query(selectQuery, values, (err, results) => {
+      if (err) {
+          console.error('Error querying classes table:', err);
+          return res.status(500).json({ error: 'Internal Server Error' });
+      }
+// console.log(results[0].classs)
+      if (results.length > 0) {
+        console.log(class_name,time_slot,dayToCheck)
+          const matchingClass = results[0].classs;
+          return res.json({
+              message: `Teacher already has a class in ${matchingClass}.`,
+              match: true,
+          });
+      } else {
+          return res.json({
+              message: `No match found for class_name ${class_name} on Monday in other classes.`,
+              match: false,
+          });
+      }
+  });
+});
+router.get('/class-occurrences', (req, res) => {
+  // Query to count occurrences of each class on different days
+  const query = 'SELECT class_name, day, COUNT(*) as occurrences FROM classes GROUP BY class_name, day';
+
+  db.query(query, (err, results) => {
+      if (err) {
+          console.error('Error querying classes table:', err);
+          return res.status(500).json({ error: 'Internal Server Error' });
+      }
+
+      // Organize the results into an array for each class
+      const classOccurrences = {};
+      results.forEach(result => {
+          const className = result.class_name;
+          const day = result.day;
+          const occurrences = result.occurrences;
+
+          if (!classOccurrences[className]) {
+              classOccurrences[className] = {};
           }
-        });
+
+          classOccurrences[className][day] = occurrences;
+      });
+
+      return res.json({ classOccurrences });
+  });
+});
+router.get('/checkClassTeacher/:teacherName', (req, res) => {
+  const teacherName = req.params.teacherName;
+
+  // Execute a SQL query to check if the class_teacher exists
+  const sql = 'SELECT * FROM classes WHERE class_teacher = ?';
+  db.query(sql, [teacherName], (err, results) => {
+    if (err) {
+      console.error('Database query error:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      if (results.length > 0) {
+        res.json({ exists: true ,class_name:results[0].class_name});
+      } else {
+        res.json({ exists: false });
       }
     }
-  
-    res.json({ message: 'Classes inserted successfully' });
   });
-  module.exports=router
+});
+
+
+
+ module.exports=router

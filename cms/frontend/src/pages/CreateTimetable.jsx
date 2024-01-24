@@ -16,19 +16,56 @@ const CreateTimeTable = () => {
   const [tableData, setTableData] = useState({});
   const[classs,setClasss]=useState()
   const[toggle,setToggle]=useState(false)
+  const[classTeacher,setClassTeacher]=useState()
   const navigate=useNavigate()
+
     const [updatedClasses,setUpdatedClasses] = useState()
   // Function to handle click on th or td
+  const timeArr = ['7:00','7:40','8:20','9:00','9:40','10:40','11:20']
+  
   const handleClick = (key, value) => {
     setTableData((prevData) => ({
       ...prevData,
       [key]: value,
     }));
   };
+const handleClassTeacher=async(e)=>{
+  const response=await axios({
+    method:"get",
+    baseURL:"http://localhost:8000/api/",
+    url:`timeTable/checkClassTeacher/${e.target.value}`,
+    
+  })
+  if(response.data.exists)
+  {
+    alert(`${e.target.value} is a class teacher for ${response.data.class_name}`)
+  }
+  else
+  setClassTeacher(e.target.value)
 
+}
 
-
-  const  handleChange = (e,index,day) =>{
+  const checkClassConflict=async(class_name,classs,dayToCheck,time_slot)=>{
+    const response=await axios({
+        method:"post",
+        baseURL:"http://localhost:8000/api/",
+        url:"timeTable/check-class-match",
+        data:{
+            classs,
+            class_name,
+            dayToCheck,
+            time_slot
+        }
+        
+    })
+    return response.data
+  }
+  const  handleChange = async(e,index,day,timeSlot,dayToCheck) =>{
+    const classMatch=await checkClassConflict(e.target.value,classs,dayToCheck,timeSlot)
+    if(classMatch.match)
+    alert(classMatch.message)
+    else{
+    console.log(timeSlot)
     const {name,value,key} = e.target;
     
     const indexToUpdateExists =day?.some(subarray => subarray.class_id === index);
@@ -38,14 +75,15 @@ if (indexToUpdateExists) {
    day.forEach(subarray => {
         if (subarray.class_id === index) {
             subarray.class_name = e.target.value;
+            subarray.time_slot = timeSlot
         }
     });
 } else {
     // Push a new subarray
-   day.push({class_id:index , class_name:e.target.value});
+   day.push({class_id:index , class_name:e.target.value,time_slot:timeSlot});
 }
 console.log(day)
-
+    
 
     // arr[index]=value
     // setUpdatedClasses(updatedClasses)
@@ -53,8 +91,9 @@ console.log(day)
     
     // console.log(name,value)
     // setStudentData({ ...studentData, [name]:value });
-  
+}
   }
+  
   const handleSave = async(e)=>{
     // setMonday(monday.map(subarray => subarray.class_name))
     // tuesday.map(subarray => subarray.slice(1));
@@ -62,10 +101,15 @@ console.log(day)
     // thursday.map(subarray => subarray.slice(1));
     // friday.map(subarray => subarray.slice(1));
 const data={
-  Monday:monday.map(subarray => subarray.class_name)
+  classs,
+  Monday:monday.map(subarray => [subarray.class_name,subarray.time_slot]),
+  Tuesday:tuesday.map(subarray => [subarray.class_name,subarray.time_slot]),
+  Wednesday:wednesday.map(subarray => [subarray.class_name,subarray.time_slot]),
+  Thursday:thursday.map(subarray => [subarray.class_name,subarray.time_slot]),
+  Friday:friday.map(subarray => [subarray.class_name,subarray.time_slot])
 }
 
-    console.log(data)
+    // console.log(data)
        await axios(
         {
           method:"post",
@@ -73,11 +117,11 @@ const data={
           url:"/timeTable/insert-classes",
           data:{
             classs,
-            Monday:monday.map(subarray => subarray.class_name),
-            Tuesday:tuesday.map(subarray => subarray.class_name),
-            Wednesday:wednesday.map(subarray => subarray.class_name),
-            Thursday:thursday.map(subarray => subarray.class_name),
-            Friday:friday.map(subarray => subarray.class_name)
+            Monday:monday.map(subarray => [subarray.class_name,subarray.time_slot]),
+            Tuesday:tuesday.map(subarray => [subarray.class_name,subarray.time_slot]),
+            Wednesday:wednesday.map(subarray => [subarray.class_name,subarray.time_slot]),
+            Thursday:thursday.map(subarray => [subarray.class_name,subarray.time_slot]),
+            Friday:friday.map(subarray => [subarray.class_name,subarray.time_slot])
           }
         }
       )
@@ -101,7 +145,7 @@ const data={
     console.log(response.data)
     if(!response.data.classes.Monday)
     {
-    setClasses(response.data.classes)
+    setClasss(e.target.value)
     setToggle(true)
       }else
     {
@@ -143,7 +187,17 @@ const data={
             <option value="7-Red">7-Red</option>
             
         </select>
+        
+        <label style={{color:"black",fontSize:"small",paddingLeft:"5px"}}>Class Teacher:</label>
+        <select onChange={e=>handleClassTeacher(e)}>
+        <option>--select teacher--</option>
+        <option value="Sir Aleem">Sir Aleem</option>
+        <option value="Mam Rafia">Mam Rafia</option>
+        <option value="Sir Adeel">Sir Adeel</option>
+        <option value="Mam Joddat">Mam Joddat</option>
+        </select>
         </div>
+        
         {/* {classes && <h4>{classes.monday[0]}</h4>} */}
        {
         toggle && 
@@ -161,9 +215,9 @@ const data={
                                 <th class="text-uppercase text-primary">7:40</th>
                                 <th class="text-uppercase text-primary">8:20</th>
                                 <th class="text-uppercase text-primary">9:00</th>
+                                <th class="text-uppercase text-primary">9:40</th>
                                 <th class="text-uppercase text-primary">10:40</th>
                                 <th class="text-uppercase text-primary">11:20</th>
-                                <th class="text-uppercase text-primary">12:00</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -171,7 +225,16 @@ const data={
                           <td className='align-middle text-primary'>Monday</td>
                             {Array.from({ length: 7 }, (_, index) => (
                                   <>
-                                  <td><input placeholder={''}  key={index} onChange={e=>handleChange(e,index,monday)}/></td>           
+                                  <td>
+                                  <select onChange={e=>handleChange(e,index,monday,timeArr[index],"Monday")} key={index}>
+        <option>--select teacher--</option>
+        <option value="Sir Aleem">Sir Aleem</option>
+        <option value="Mam Rafia">Mam Rafia</option>
+        <option value="Sir Adeel">Sir Adeel</option>
+        <option value="Mam Joddat">Mam Joddat</option>
+        </select>
+                                  {/* <input placeholder={''}  key={index} onChange={e=>handleChange(e,index,monday,timeArr[index])}/> */}
+                                  </td>           
                           </>
                           ))}
 
@@ -180,7 +243,15 @@ const data={
                           <td className='align-middle text-primary'>Tuesday</td>
                           {Array.from({ length: 7 }, (_, index) => (
                             <>
-                            <td><input placeholder={''}  key={index} onChange={e=>handleChange(e,index,tuesday)}/></td>           
+                            <td> <select onChange={e=>handleChange(e,index,tuesday,timeArr[index],"Tuesday")} key={index}>
+        <option>--select teacher--</option>
+        <option value="Sir Aleem">Sir Aleem</option>
+        <option value="Mam Rafia">Mam Rafia</option>
+        <option value="Sir Adeel">Sir Adeel</option>
+        <option value="Mam Joddat">Mam Joddat</option>
+        </select>
+                            {/* <input placeholder={''}  key={index} onChange={e=>handleChange(e,index,tuesday,timeArr[index])}/> */}
+                            </td>           
                             </>
                           ))}
                                 </tr>
@@ -188,7 +259,16 @@ const data={
                           <td className='align-middle text-primary'>Wednesday</td>
                           {Array.from({ length: 7 }, (_, index) => (
                             <>
-                            <td><input placeholder={''}  onChange={e=>handleChange(e,index,wednesday)} key={index}/></td>           
+                            <td>
+                            <select onChange={e=>handleChange(e,index,wednesday,timeArr[index],"Wednesday")} key={index}>
+        <option>--select teacher--</option>
+        <option value="Sir Aleem">Sir Aleem</option>
+        <option value="Mam Rafia">Mam Rafia</option>
+        <option value="Sir Adeel">Sir Adeel</option>
+        <option value="Mam Joddat">Mam Joddat</option>
+        </select>
+                            {/* <input placeholder={''}  onChange={e=>handleChange(e,index,wednesday,timeArr[index])} key={index}/> */}
+                            </td>           
                           </>
                         ))}
                               </tr>
@@ -196,7 +276,16 @@ const data={
                           <td className='align-middle text-primary'>Thursday</td>
                           {Array.from({ length: 7 }, (_, index) => (
                               <>
-                              <td><input placeholder={''}  onChange={e=>handleChange(e,index,thursday)} key={index}/></td>           
+                              <td>
+                              <select onChange={e=>handleChange(e,index,thursday,timeArr[index],"Thursday")} key={index}>
+        <option>--select teacher--</option>
+        <option value="Sir Aleem">Sir Aleem</option>
+        <option value="Mam Rafia">Mam Rafia</option>
+        <option value="Sir Adeel">Sir Adeel</option>
+        <option value="Mam Joddat">Mam Joddat</option>
+        </select>
+                              {/* <input placeholder={''}  onChange={e=>handleChange(e,index,thursday,timeArr[index])} key={index}/> */}
+                              </td>           
                             </>
                           ))}
                               </tr>
@@ -204,7 +293,16 @@ const data={
                           <td className='align-middle text-primary'>Friday</td>
                           {Array.from({ length: 7 }, (_, index) => (
                                     <>
-                                    <td><input placeholder={''}  onChange={e=>handleChange(e,index,friday)}  key={index}/></td>           
+                                    <td>
+                                    <select onChange={e=>handleChange(e,index,friday,timeArr[index],"Friday")} key={index}>
+        <option>--select teacher--</option>
+        <option value="Sir Aleem">Sir Aleem</option>
+        <option value="Mam Rafia">Mam Rafia</option>
+        <option value="Sir Adeel">Sir Adeel</option>
+        <option value="Mam Joddat">Mam Joddat</option>
+        </select>
+                                    {/* <input placeholder={''}  onChange={e=>handleChange(e,index,friday,timeArr[index])}  key={index}/> */}
+                                    </td>           
                             </>
                           ))}
                         </tr>
