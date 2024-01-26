@@ -64,6 +64,7 @@ import MainPage from "./pages/MainPage";
 import TimeTable from "./pages/TimeTable";
 import UpdateTimeTable from "./pages/updateTimeTable";
 import CreateTimeTable from "./pages/CreateTimetable";
+import AddTeacher from "./pages/AddTeacher";
 
 axios.defaults.withCredentials = true;
 
@@ -90,7 +91,7 @@ function App() {
           element={
             <Sidebar>
               <Layout>
-                <TimeTable />
+                <AddTeacher />
               </Layout>
             </Sidebar>
           }

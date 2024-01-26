@@ -104,15 +104,16 @@ router.put('/classes/monday',(req,res)=>{
     // });
     const classs = req.params.classs;
 
-    const query = 'SELECT class_id, class_name, day,time_slot FROM classes WHERE classs = ?';
+    const query = 'SELECT class_id, class_name, day,time_slot,class_teacher FROM classes WHERE classs = ?';
     db.query(query, [classs], (err, results) => {
       if (err) {
         console.error('Error executing MySQL query:', err);
         res.status(500).json({ error: 'Internal Server Error' });
       } else {
         const organizedClasses = {};
-  
+        const class_teacher=results[0]?.class_teacher
         results.forEach((result) => {
+          
           const { class_id, class_name, day,time_slot } = result;
   
           // Create an array for the day if it doesn't exist
@@ -123,20 +124,20 @@ router.put('/classes/monday',(req,res)=>{
           organizedClasses[day].push({ class_id, class_name,time_slot });
         });
   
-        res.json({ classes: organizedClasses });
+        res.json({ classes: organizedClasses ,class_teacher:class_teacher});
       }
     });
   });
 
   router.post('/insert-classes', (req, res) => {
-    const { classs, ...classData } = req.body;
+    const { classs,classTeacher, ...classData } = req.body;
 console.log(classs)
     // Extract day, class_name, and classs from the req.body and insert into classes table
     for (const day of Object.keys(classData)) {
         const classesArray = classData[day];
         for (const [className, time_slot] of classesArray) {
-            const insertQuery = 'INSERT INTO classes (class_name, day, classs, time_slot) VALUES (?, ?, ?, ?)';
-            const values = [className, day, classs, time_slot];
+            const insertQuery = 'INSERT INTO classes (class_name, day, classs, time_slot,class_teacher) VALUES (?, ?, ?, ?,?)';
+            const values = [className, day, classs, time_slot,classTeacher];
 
             db.query(insertQuery, values, (err, results) => {
                 if (err) {
@@ -154,8 +155,8 @@ router.post('/check-class-match', (req, res) => {
   
 
   // Check if the specified class_name for Monday matches with any other class_name for Monday
-  const selectQuery = 'SELECT * FROM classes WHERE day = ? AND class_name = ? AND time_slot=?';
-  const values = [dayToCheck, class_name, time_slot ];
+  const selectQuery = 'SELECT * FROM classes WHERE day = ? AND class_name = ? AND time_slot=? AND  classs <> ?';
+  const values = [dayToCheck, class_name, time_slot ,classs];
 
   db.query(selectQuery, values, (err, results) => {
       if (err) {
@@ -209,17 +210,65 @@ router.get('/checkClassTeacher/:teacherName', (req, res) => {
   const teacherName = req.params.teacherName;
 
   // Execute a SQL query to check if the class_teacher exists
-  const sql = 'SELECT * FROM classes WHERE class_teacher = ?';
+  const sql = 'SELECT * FROM classes WHERE class_teacher = ? ';
   db.query(sql, [teacherName], (err, results) => {
     if (err) {
       console.error('Database query error:', err);
       res.status(500).json({ error: 'Internal Server Error' });
     } else {
       if (results.length > 0) {
-        res.json({ exists: true ,class_name:results[0].class_name});
+        res.json({ exists: true ,classs:results[0].classs});
       } else {
         res.json({ exists: false });
       }
+    }
+  });
+});
+
+router.get('/checkClassTeacherForUpdation/:teacherName/:classs', (req, res) => {
+  const teacherName = req.params.teacherName;
+  const classs=req.params.classs;
+
+  // Execute a SQL query to check if the class_teacher exists
+  const sql = 'SELECT * FROM classes WHERE class_teacher = ? and classs <> ? ';
+  db.query(sql, [teacherName,classs], (err, results) => {
+    if (err) {
+      console.error('Database query error:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      console.log(results)
+      if (results.length > 0) {
+        res.json({ exists: true ,classs:results[0].classs});
+      } else {
+        res.json({ exists: false });
+      }
+    }
+  });
+});
+router.post('/addTeacher', (req, res) => {
+  const { teacher_name, main_subject, secondary_subject } = req.body;
+
+  // Execute a SQL query to insert teacher information into the "teachers" table
+  const sql = 'INSERT INTO teachers (teacher_name, main_subject, secondary_subject) VALUES (?, ?, ?)';
+  db.query(sql, [teacher_name, main_subject, secondary_subject], (err, results) => {
+    if (err) {
+      console.error('Database query error:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      res.json({ message: 'Teacher information added successfully' });
+    }
+  });
+});
+
+router.get('/getTeachers', (req, res) => {
+  // Execute a SQL query to retrieve all teachers from the "teachers" table
+  const sql = 'SELECT * FROM teachers';
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('Database query error:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      res.json(results);
     }
   });
 });

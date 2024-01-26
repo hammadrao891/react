@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
 
 const UpdateTimeTable = () => {
+  const[teachers,setTeachers]=useState()
   const [classes,setClasses] = useState()
   const [timetable, setTimetable] = useState([]);
   const [addedEvents, setAddedEvents] = useState([]);
@@ -12,7 +13,23 @@ const UpdateTimeTable = () => {
   const[classs,setClasss] = useState()
   const[toggle,setToggle]=useState(false)
     const [updatedClasses,setUpdatedClasses] = useState()
+    const [ classTeacher,setClassTeacher] = useState()
     const navigate = useNavigate()
+    
+  useEffect(()=>{
+    const getTeachers=async()=>{
+      try{
+        const response =await axios({
+          method:"get",
+          baseURL:"http://localhost:8000/api/",
+          url:`timeTable/getTeachers`
+        })
+        setTeachers(response.data)
+      }
+      catch{}
+    }
+    getTeachers()
+  },[])
   // Function to handle click on th or td
   const handleClick = (key, value) => {
     setTableData((prevData) => ({
@@ -108,7 +125,21 @@ console.log(updatedClassess)
       }
       
     }
-
+    const handleClassTeacher=async(e)=>{
+      const response=await axios({
+        method:"get",
+        baseURL:"http://localhost:8000/api/",
+        url:`timeTable/checkClassTeacherForUpdation/${e.target.value}/${classs}`,
+        
+      })
+      if(response.data.exists)
+      {
+        alert(`${e.target.value} is a class teacher for ${response.data.classs}`)
+      }
+      else
+      setClassTeacher(e.target.value)
+    
+    }
   return (
     <div className="timetable-container">
      <ToastContainer/>
@@ -145,6 +176,15 @@ console.log(updatedClassess)
                 </div>
   {toggle && <>
                 <div class="table-responsive">
+                <div style={{display:"flex"}}>
+                <h4>Class Teacher:</h4>
+                <select onChange={e=>handleClassTeacher(e)}>
+        <option>--select teacher--</option>
+        {teachers && teachers?.map((teacher)=>
+        <option value={teacher.teacher_name}>{teacher.teacher_name}</option>
+        )}
+        </select>
+        </div>
                     <table class="tableL table-bordered text-center w-100" style={{width:"20%"}}>
                         <thead>
                             <tr class="bg-light-gray">
@@ -162,14 +202,13 @@ console.log(updatedClassess)
                         <tbody>
                         <tr>
                           <td className='align-middle text-primary'>Monday</td>
-                          {classes && classes.Monday.map((m,index)=>
+                          {classes && classes.Monday?.map((m,index)=>
         <td>
         <select onChange={e=>handleChange(e,m.class_id,"Monday")} key={index}>
         <option>--select teacher--</option>
-        <option value="Sir Aleem">Sir Aleem</option>
-        <option value="Mam Rafia">Mam Rafia</option>
-        <option value="Sir Adeel">Sir Adeel</option>
-        <option value="Mam Joddat">Mam Joddat</option>
+        {teachers && teachers?.map((teacher)=>
+        <option value={teacher.teacher_name}>{teacher.teacher_name}</option>
+        )}
         </select>
         {/* <input placeholder={m.class_name} onChange={e=>handleChange(e,m.class_id)} key={index}/> */}
         </td>
@@ -178,15 +217,13 @@ console.log(updatedClassess)
                         </tr>
                         <tr>
                           <td className='align-middle text-primary'>Tuesday</td>
-                        {classes && classes.Tuesday.map((m,index)=>
+                        {classes && classes.Tuesday?.map((m,index)=>
                          <td>
                          <select onChange={e=>handleChange(e,m.class_id,"Monday")} key={index}>
                         <option>--select teacher--</option>
-                        <option value="Sir Aleem">Sir Aleem</option>
-                        <option value="Mam Rafia">Mam Rafia</option>
-                        <option value="Sir Adeel">Sir Adeel</option>
-                        <option value="Mam Joddat">Mam Joddat</option>
-                        </select>
+                        {teachers && teachers?.map((teacher)=>
+        <option value={teacher.teacher_name}>{teacher.teacher_name}</option>
+        )}</select>
                          {/* <input placeholder={m.class_name} onChange={e=>handleChange(e,m.class_id)} key={index}/> */}
                          </td>
                           )}
@@ -194,15 +231,13 @@ console.log(updatedClassess)
                         </tr>
                         <tr>
                           <td className='align-middle text-primary'>Wednesday</td>
-                        {classes && classes.Wednesday.map((m,index)=>
+                        {classes && classes.Wednesday?.map((m,index)=>
                          <td>
                          <select onChange={e=>handleChange(e,m.class_id,"Monday")} key={index}>
         <option>--select teacher--</option>
-        <option value="Sir Aleem">Sir Aleem</option>
-        <option value="Mam Rafia">Mam Rafia</option>
-        <option value="Sir Adeel">Sir Adeel</option>
-        <option value="Mam Joddat">Mam Joddat</option>
-        </select>
+        {teachers && teachers?.map((teacher)=>
+        <option value={teacher.teacher_name}>{teacher.teacher_name}</option>
+        )} </select>
                          {/* <input placeholder={m.class_name} onChange={e=>handleChange(e,m.class_id)} key={index}/> */}
                          </td>
                           )}
@@ -210,15 +245,13 @@ console.log(updatedClassess)
                         </tr>
                         <tr>
                           <td className='align-middle text-primary'>Thursday</td>
-                        {classes && classes.Thursday.map((m,index)=>
+                        {classes && classes.Thursday?.map((m,index)=>
                          <td>
                          <select onChange={e=>handleChange(e,m.class_id,"Monday")} key={index}>
         <option>--select teacher--</option>
-        <option value="Sir Aleem">Sir Aleem</option>
-        <option value="Mam Rafia">Mam Rafia</option>
-        <option value="Sir Adeel">Sir Adeel</option>
-        <option value="Mam Joddat">Mam Joddat</option>
-        </select>
+        {teachers && teachers?.map((teacher)=>
+        <option value={teacher.teacher_name}>{teacher.teacher_name}</option>
+        )}</select>
                          {/* <input placeholder={m.class_name} onChange={e=>handleChange(e,m.class_id)} key={index}/> */}
                          </td>
                           )}
@@ -226,14 +259,12 @@ console.log(updatedClassess)
                         </tr>
                         <tr>
                           <td className='align-middle text-primary'>Friday</td>
-                        {classes && classes.Friday.map((m,index)=>
+                        {classes && classes.Friday?.map((m,index)=>
                          <td><select onChange={e=>handleChange(e,m.class_id,"Monday")} key={index}>
         <option>--select teacher--</option>
-        <option value="Sir Aleem">Sir Aleem</option>
-        <option value="Mam Rafia">Mam Rafia</option>
-        <option value="Sir Adeel">Sir Adeel</option>
-        <option value="Mam Joddat">Mam Joddat</option>
-        </select>
+        {teachers && teachers?.map((teacher)=>
+        <option value={teacher.teacher_name}>{teacher.teacher_name}</option>
+        )} </select>
                          {/* <input placeholder={m.class_name} onChange={e=>handleChange(e,m.class_id)} key={index}/> */}
                          </td>
                           )}

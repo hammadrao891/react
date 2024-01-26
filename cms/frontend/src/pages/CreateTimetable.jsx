@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from "react-toastify";
 
 const CreateTimeTable = () => {
+  const [teachers,setTeachers]=useState()
   const[monday,setMonday]=useState([])
   const[tuesday,setTuesday]=useState([])
   const[wednesday,setWednesday]=useState([])
@@ -23,6 +24,21 @@ const CreateTimeTable = () => {
   // Function to handle click on th or td
   const timeArr = ['7:00','7:40','8:20','9:00','9:40','10:40','11:20']
   
+
+  useEffect(()=>{
+    const getTeachers=async()=>{
+      try{
+        const response =await axios({
+          method:"get",
+          baseURL:"http://localhost:8000/api/",
+          url:`timeTable/getTeachers`
+        })
+        setTeachers(response.data)
+      }
+      catch{}
+    }
+    getTeachers()
+  },[])
   const handleClick = (key, value) => {
     setTableData((prevData) => ({
       ...prevData,
@@ -38,7 +54,7 @@ const handleClassTeacher=async(e)=>{
   })
   if(response.data.exists)
   {
-    alert(`${e.target.value} is a class teacher for ${response.data.class_name}`)
+    alert(`${e.target.value} is a class teacher for ${response.data.classs}`)
   }
   else
   setClassTeacher(e.target.value)
@@ -100,14 +116,7 @@ console.log(day)
     // wednesday.map(subarray => subarray.slice(1));
     // thursday.map(subarray => subarray.slice(1));
     // friday.map(subarray => subarray.slice(1));
-const data={
-  classs,
-  Monday:monday.map(subarray => [subarray.class_name,subarray.time_slot]),
-  Tuesday:tuesday.map(subarray => [subarray.class_name,subarray.time_slot]),
-  Wednesday:wednesday.map(subarray => [subarray.class_name,subarray.time_slot]),
-  Thursday:thursday.map(subarray => [subarray.class_name,subarray.time_slot]),
-  Friday:friday.map(subarray => [subarray.class_name,subarray.time_slot])
-}
+
 
     // console.log(data)
        await axios(
@@ -116,7 +125,7 @@ const data={
           baseURL:'http://localhost:8000/api/',
           url:"/timeTable/insert-classes",
           data:{
-            classs,
+            classs,classTeacher,
             Monday:monday.map(subarray => [subarray.class_name,subarray.time_slot]),
             Tuesday:tuesday.map(subarray => [subarray.class_name,subarray.time_slot]),
             Wednesday:wednesday.map(subarray => [subarray.class_name,subarray.time_slot]),
@@ -163,7 +172,7 @@ const data={
     <div class="timetable-img text-center">
     <h2>Create TimeTable</h2>
       <label style={{color:"black",fontSize:"small"}}>Select Class:</label>
-        <select onChange={e=>handleClass(e)} name="classs" >
+        <select className='form-control form-control-lg' onChange={e=>handleClass(e)} name="classs" >
             <option>--select class--</option>
             <option value="Play Group">Play Group</option>
             <option value="Nursery Green">Nursery Green</option>
@@ -188,20 +197,21 @@ const data={
             
         </select>
         
-        <label style={{color:"black",fontSize:"small",paddingLeft:"5px"}}>Class Teacher:</label>
-        <select onChange={e=>handleClassTeacher(e)}>
-        <option>--select teacher--</option>
-        <option value="Sir Aleem">Sir Aleem</option>
-        <option value="Mam Rafia">Mam Rafia</option>
-        <option value="Sir Adeel">Sir Adeel</option>
-        <option value="Mam Joddat">Mam Joddat</option>
-        </select>
+        
         </div>
         
         {/* {classes && <h4>{classes.monday[0]}</h4>} */}
        {
-        toggle && 
- <div className="" style={{width:"100em"}} >
+        toggle &&
+         
+ <div  >
+        <label style={{color:"black",fontSize:"small",paddingLeft:"5px"}} >Class Teacher:</label>
+        <select className='form-control form-control-lg' onChange={e=>handleClassTeacher(e)}>
+        <option>--select teacher--</option>
+        {teachers && teachers?.map((teacher)=>
+        <option value={teacher.teacher_name}>{teacher.teacher_name}</option>
+        )}
+        </select>
                 <div class="timetable-img text-center">
                     <img src="img/content/timetable.png" alt=""/>
                 </div>
@@ -226,12 +236,11 @@ const data={
                             {Array.from({ length: 7 }, (_, index) => (
                                   <>
                                   <td>
-                                  <select onChange={e=>handleChange(e,index,monday,timeArr[index],"Monday")} key={index}>
+                                  <select className='form-control form-control-lg' onChange={e=>handleChange(e,index,monday,timeArr[index],"Monday")} key={index}>
         <option>--select teacher--</option>
-        <option value="Sir Aleem">Sir Aleem</option>
-        <option value="Mam Rafia">Mam Rafia</option>
-        <option value="Sir Adeel">Sir Adeel</option>
-        <option value="Mam Joddat">Mam Joddat</option>
+        {teachers && teachers?.map((teacher)=>
+        <option value={teacher.teacher_name}>{teacher.teacher_name}</option>
+        )}
         </select>
                                   {/* <input placeholder={''}  key={index} onChange={e=>handleChange(e,index,monday,timeArr[index])}/> */}
                                   </td>           
@@ -243,12 +252,11 @@ const data={
                           <td className='align-middle text-primary'>Tuesday</td>
                           {Array.from({ length: 7 }, (_, index) => (
                             <>
-                            <td> <select onChange={e=>handleChange(e,index,tuesday,timeArr[index],"Tuesday")} key={index}>
+                            <td> <select className='form-control form-control-lg' onChange={e=>handleChange(e,index,tuesday,timeArr[index],"Tuesday")} key={index}>
         <option>--select teacher--</option>
-        <option value="Sir Aleem">Sir Aleem</option>
-        <option value="Mam Rafia">Mam Rafia</option>
-        <option value="Sir Adeel">Sir Adeel</option>
-        <option value="Mam Joddat">Mam Joddat</option>
+        {teachers && teachers?.map((teacher)=>
+        <option value={teacher.teacher_name}>{teacher.teacher_name}</option>
+        )}
         </select>
                             {/* <input placeholder={''}  key={index} onChange={e=>handleChange(e,index,tuesday,timeArr[index])}/> */}
                             </td>           
@@ -260,12 +268,11 @@ const data={
                           {Array.from({ length: 7 }, (_, index) => (
                             <>
                             <td>
-                            <select onChange={e=>handleChange(e,index,wednesday,timeArr[index],"Wednesday")} key={index}>
+                            <select className='form-control form-control-lg' onChange={e=>handleChange(e,index,wednesday,timeArr[index],"Wednesday")} key={index}>
         <option>--select teacher--</option>
-        <option value="Sir Aleem">Sir Aleem</option>
-        <option value="Mam Rafia">Mam Rafia</option>
-        <option value="Sir Adeel">Sir Adeel</option>
-        <option value="Mam Joddat">Mam Joddat</option>
+        {teachers && teachers?.map((teacher)=>
+        <option value={teacher.teacher_name}>{teacher.teacher_name}</option>
+        )}
         </select>
                             {/* <input placeholder={''}  onChange={e=>handleChange(e,index,wednesday,timeArr[index])} key={index}/> */}
                             </td>           
@@ -277,12 +284,11 @@ const data={
                           {Array.from({ length: 7 }, (_, index) => (
                               <>
                               <td>
-                              <select onChange={e=>handleChange(e,index,thursday,timeArr[index],"Thursday")} key={index}>
+                              <select className='form-control form-control-lg' onChange={e=>handleChange(e,index,thursday,timeArr[index],"Thursday")} key={index}>
         <option>--select teacher--</option>
-        <option value="Sir Aleem">Sir Aleem</option>
-        <option value="Mam Rafia">Mam Rafia</option>
-        <option value="Sir Adeel">Sir Adeel</option>
-        <option value="Mam Joddat">Mam Joddat</option>
+        {teachers && teachers?.map((teacher)=>
+        <option value={teacher.teacher_name}>{teacher.teacher_name}</option>
+        )}
         </select>
                               {/* <input placeholder={''}  onChange={e=>handleChange(e,index,thursday,timeArr[index])} key={index}/> */}
                               </td>           
@@ -294,12 +300,11 @@ const data={
                           {Array.from({ length: 7 }, (_, index) => (
                                     <>
                                     <td>
-                                    <select onChange={e=>handleChange(e,index,friday,timeArr[index],"Friday")} key={index}>
+                                    <select className='form-control form-control-lg' onChange={e=>handleChange(e,index,friday,timeArr[index],"Friday")} key={index}>
         <option>--select teacher--</option>
-        <option value="Sir Aleem">Sir Aleem</option>
-        <option value="Mam Rafia">Mam Rafia</option>
-        <option value="Sir Adeel">Sir Adeel</option>
-        <option value="Mam Joddat">Mam Joddat</option>
+        {teachers && teachers?.map((teacher)=>
+        <option value={teacher.teacher_name}>{teacher.teacher_name}</option>
+        )}
         </select>
                                     {/* <input placeholder={''}  onChange={e=>handleChange(e,index,friday,timeArr[index])}  key={index}/> */}
                                     </td>           
@@ -310,8 +315,10 @@ const data={
                             
                         </tbody>
                     </table>
-  
-                    <button  className="--btn --btn-success" onClick={handleSave}>Create</button>              </div>
+                    <div style={{display:"flex",justifyContent:"center",paddingTop:"3em"}}>
+                    <button  className="--btn --btn-success" onClick={handleSave}>Create</button>   
+                         </div>
+                    </div>
             </div>
 }
  

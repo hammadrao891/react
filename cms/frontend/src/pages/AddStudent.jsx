@@ -46,12 +46,19 @@ const [studentData,setStudentData] = useState({
         setStudentData({ ...studentData, [name]:value });
     }
   return (
-    <div className="add-tender">
-      <Card cardClass={"card"}>
+    <div className="add-tender" style={{display:"flex",justifyContent:"center", background:"#FFEAA7"}}>
+    <div style={{width:"100%"}}>
+    <div style={{display:"flex",justifyContent:"center",margin:"2em",borderRadius:"50px"}}>
+      <h1>Student Registration</h1>
+    </div>
+      {/* <div cardClass={"card"}> */}
   <ToastContainer/>
         <form>
+        <div style={{display:"flex",gap:"5em",justifyContent:"space-evenly"}}>
+        <div style={{width:"50%",padding:"3em"}}>
         <label>Registration Number:</label>
             <input
+            className="form-control"
               type="number"
               name="regNum"
             
@@ -61,6 +68,7 @@ const [studentData,setStudentData] = useState({
             />
       <label>Student Name:</label>
             <input
+            className="form-control"
               type="text"
               name="name"
             
@@ -79,13 +87,13 @@ const [studentData,setStudentData] = useState({
             />
             <label>Gender:</label>
             <div style={{display:"flex",gap:"10px"}}>
-              <p>
+              <p style={{fontSize:"18px"}}>
             <input type="radio" onChange={e=>handleInputChange(e)} name="gender" value="male"/>
             Male
         </p>
        
 
-        <p>
+        <p style={{fontSize:"18px"}}>
             <input type="radio" name="gender" onChange={e=>handleInputChange(e)} value="female"/>
             Female
         </p>
@@ -164,7 +172,6 @@ const [studentData,setStudentData] = useState({
           
               onChange={e=>handleInputChange(e)}
             />
-            
             <label>Mother Name:</label>
             <input
               type="text"
@@ -204,6 +211,8 @@ const [studentData,setStudentData] = useState({
           
               onChange={e=>handleInputChange(e)}
             />
+            </div>
+            <div style={{width:"50%",padding:"3em"}}>
             
             <label>Enter Home Address(HouseNo,Road):</label>
             <input
@@ -317,9 +326,11 @@ const [studentData,setStudentData] = useState({
           
               onChange={e=>handleInputChange(e)}
             />
-            
+            </div>
+</div>
 
-      <div className="--my">
+
+      <div className="--my" style={{padding:"3em"}}>
             <button
               type="submit"
               className="--btn --btn-primary"
@@ -329,8 +340,10 @@ const [studentData,setStudentData] = useState({
             </button>
 </div>
       </form>
-      </Card>
+      {/* </Card> */}
     </div>
+    </div>
+    
   );
 };
 

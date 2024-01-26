@@ -39,11 +39,12 @@ setToggle(true)
       <div style={{display:"flex",justifyContent:"space-between"}}><h1 className='text-center'>Timetables</h1>
       <div style={{display:"flex",justifyContent:"space-between"}}>
       <button   onClick={ ()=>navigate("/update-timetable")} className="--btn --btn-success">Update TimeTable</button>
-      <button   onClick={ ()=>navigate("/create-timetable")} className="--btn --btn-success">Create TimeTable</button></div>
+      <button   onClick={ ()=>navigate("/create-timetable")} className="--btn --btn-success">Create TimeTable</button>
       <button  onClick={ ()=>navigate("/add-teacher")} className="--btn --btn-success">Add Teacher</button>
       </div>
+      </div>
  <div class="" style={{width:"100em"}}  >
- 
+    <h3>Class Teacher: {}</h3>
   <label style={{color:"black",fontSize:"large"}}>Select Class:</label>
         <select style={{fontSize:"small"}} onChange={e=>setClasss(e.target.value)} name="classs" >
             <option>--select class--</option>

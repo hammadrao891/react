@@ -24,7 +24,7 @@ console.log(req.body)
       else
       {
         const sqlFee='insert into fee(regNum,previousDue,totalAmountDue,paymentStatus,feeMonth,paidAmount,fine,paymentDate,lastMonthStatus) values(?,?,?,?,?,?,?,?,?)'
-        const value=[regNum,previousDue,totalAmountDue,paymentStatus,feeMonth,paidAmount,fine,paymentDate,lastMonthStatus]
+        const value=[regNum,0,2750,"not paid",admissionDate,0,0,admissionDate,"nil"]
         db.query(sqlFee, value, (err, result) => {
           if (err) {
             console.error('Error registering student: ' + err.message);
