@@ -8,7 +8,7 @@ const fs = require('fs');
 // Register User
 const registerUser = asyncHandler(async (req, res) => {
     const { name,classs,current_fee_month,current_fee_year,regNum,fName,address,contact,MonthlyFeeDetails,mName,officeName,monthlyFee,fCnic,mCnic,homeLandmark,officeLandmark,village,homeContact,workContact,admissionFee,securityDeposit,annualCharges,fOccupation,mOccupation,dob,gender,admissionDate, previousDue,totalAmountDue,paymentStatus,feeMonth,paidAmount,fine,paymentDate,lastMonthStatus} = req.body;
-console.log(req.body)
+// console.log(req.body)
     // if (!name || !classs) {
     //   return res.status(400).json({ error: 'Name and classs are required' });
     // }

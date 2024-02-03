@@ -10,22 +10,10 @@ import "./dashboard/Table.scss";
 
 
 const EnterExpenses = () => {
-  const [subtype, setSubtype] = useState("");
-  const [type,setType]=useState("")
-  const [data,setData]=useState()
-  const [subtypeItem,setSubtypeItem] = useState()
-  const[newItem,setNewItem]= useState()
-  const [quantity, setQuantity] = useState()
-  const [subTypeArray,setSubtypeArray]=useState()
-  const [selectedItem,setSelectedItem] = useState()
-  const [button1,setButton1] = useState(false)
-  const [button2,setButton2] = useState(false)
-  const [regNum,setRegNum] = useState()
-  const [classs,setClasss] = useState()
-  const [table,setTable]=useState(false)
+ 
   const [details,setDetails] = useState()
-  const [newMonthlyFeeDetails,setNewMonthlyFeeDetails] = useState()
-  
+ const[expenseTypes,setExpenseTypes] = useState()
+ const[accountTypes,setAccountTypes] = useState() 
   const navigate = useNavigate()
   const currentDate = new
  
@@ -40,57 +28,118 @@ const EnterExpenses = () => {
   const seconds = String(currentDate.getSeconds()).padStart(2, '0');
   
   const formattedDate = `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+
+
+  const [expenseData,setExpenseData] = useState({
+     
+      
+       
+      expense_record_time:formattedDate,
+      expense_desc: null,
+      expense_amount: null,
+      expense_pay_person: null,
+      invoice_no: null,
+      invoice_file_no: null,
+      expense_pay_account:null,
+      expense_type_id: null,
+        
+        
+  })
 useEffect(()=>{
-const fetchStudent=async()=>{
+const fetchExpenses=async()=>{
 
     try
     {
         const response = await axios({
             method:"get",
         baseURL:"http://localhost:8000/api/",
-        url:`/fee/getStudents`,
+        url:`/expense/expense_types`,
         })
         console.log(response) 
-        setDetails(response.data)
+        setExpenseTypes(response.data)
     }
     catch{
         console.log("err")
     }
 
 }
-fetchStudent();
-},[])
 
+const fetchAccountTypes=async()=>{
+
+     try
+     {
+         const response = await axios({
+          method:"get",
+         baseURL:"http://localhost:8000/api/",
+         url:`/expense/account_types`,
+         })
+         console.log(response.data[0].Acct_type_name) 
+         setAccountTypes(response.data)
+     }
+     catch{
+         console.log("err")
+     }
+ 
+ }
+fetchExpenses();
+fetchAccountTypes();
+},[])
+useEffect(()=>{console.log(expenseTypes)})
+
+const handleInputChange = (e) =>
+{
+     const {name,value} = e.target;
+     console.log(name,value)
+     setExpenseData({ ...expenseData, [name]:value });
+}
+const handleTransfer = async(req,res) =>
+{
+ 
+console.log(expenseData)
+  if(expenseData.expense_amount > 0)
+  {
+  try{
+   const res =  await axios({
+      method:"post",
+      baseURL:"http://localhost:8000/api",
+      url:`/expense/expenses/add`,
+      data:expenseData
+    })
+    console.log(res.data)
+    if(res.data.error)
+    toast.error(res.data.error)
+    else{
+    toast.success("Expense Added Successfully!")
+    setTimeout(() => {
+      navigate("/")
+      
+    }, 2000);
+  }
+  }
+  catch(error){
     
+  
+}
+  }
+  else
+{
+     toast.error("Enter a Valid Amount")
+}
+}
+ 
     
   return (
     <div className="add-tender">
-       
+       <ToastContainer/>
      <table className="table">
           <tbody>
           <tr>
                <td>Select Expense Type</td>
-               <td><select>
-                <option>Monthly Rent</option>
-                <option>Salary</option>
-                <option>Royalty</option>
-                <option>Utitlity Bills</option>
-                <option>Maintenance & Repair</option>
-                <option>Kitchen</option>
-                <option>Stationary</option>
-                <option value="EOBI">EOBI</option>
-                <option value="Social Security">Social Security</option>
-                <option value="Income Tax">Income Tax</option>
-                <option value='Personal'>Personal</option>
-                <option value='Advertisement'>Advertisement</option>
-                <option value='School Visits to HQ/Board etc'>School Visits to HQ/Board etc</option>
-                <option value='STAFF LOAN'>STAFF LOAN</option>
-                <option value='MOTORCYCLE PETROL'>MOTORCYCLE PETROL</option>
-                <option value='MOTORCYCLE REPAIR&MAINTENANCE'>MOTORCYCLE REPAIR&MAINTENANCE</option>
-                <option value='CAR REPAIR&MAINTENANCE'>CAR REPAIR&MAINTENANCE</option>
-                <option value='CAR PETROL'>CAR PETROL</option>
-                <option value='STAFF WELFARE'>STAFF WELFARE</option>
-                <option value='ASSETS'>ASSETS</option>
+               <td><select name="expense_type_id" onChange={e=>handleInputChange(e)}>
+               <option>--select--</option>
+               {expenseTypes && expenseTypes.map((m)=>
+               <option value={m.expense_type_id}>{m.expense_type_name}</option>
+               )}
                 </select></td>  
           </tr>
           
@@ -101,79 +150,42 @@ fetchStudent();
           
           <tr>
                <td>Expense Description</td>
-               <td><input /></td>  
+               <td><input onChange={e=>handleInputChange(e)} name="expense_desc" /></td>  
           </tr>
           
           <tr>
                <td>Expense Amount</td>
-               <td><input /></td>  
+               <td><input onChange={e=>handleInputChange(e)}  name="expense_amount" type="number"/></td>  
           </tr>
           
           <tr>
                <td>Expense Pay Account</td>
-               <td><select>
-               <option value="NITB Bank Account">NITB Bank Account</option>
-               <option value="Cash IN Hand Account">Cash IN Hand Account</option>
-               <option value="Fee Collection">Fee Collection</option>
+               <td><select name="Acct_type_id" onChange={e=>handleInputChange(e)}>
+               <option>--select--</option>
+               {accountTypes && accountTypes?.map((m)=>
+               <option value={m.Acct_type_id}>{m.Acct_type_name}</option>
+               )}  
                </select></td>  
           </tr>
           <tr>
                <td>Invoice Pay Person</td>
-               <td><input /></td>  
+               <td><input onChange={e=>handleInputChange(e)} name="expense_pay_person"/></td>  
           </tr>
           
           <tr>
                <td>Invoice Number</td>
-               <td><input /></td>  
+               <td><input onChange={e=>handleInputChange(e)} name="invoice_no"/></td>  
           </tr>
           
           <tr>
                <td>Invoice File Number</td>
-               <td><input /></td>  
+               <td><input onChange={e=>handleInputChange(e)} name="invoice_file_no" /></td>  
           </tr>
          </tbody>
          </table>
-         <button className="--btn --btn-primary">Submit</button>
+         <button className="--btn --btn-primary" onClick={handleTransfer}>Submit</button>
       {/* </Card> */}
     </div>
   );
 };
-
-EnterExpenses.modules = {
-  toolbar: [
-    [{ header: "1" }, { header: "2" }, { font: [] }],
-    [{ size: [] }],
-    ["bold", "italic", "underline", "strike", "blockquote"],
-    [{ align: [] }],
-    [{ color: [] }, { background: [] }],
-    [
-      { list: "ordered" },
-      { list: "bullet" },
-      { indent: "-1" },
-      { indent: "+1" },
-    ],
-    ["clean"],
-  ],
-};
-EnterExpenses.formats = [
-  "header",
-  "font",
-  "size",
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "blockquote",
-  "color",
-  "background",
-  "list",
-  "bullet",
-  "indent",
-  "link",
-  "video",
-  "image",
-  "code-block",
-  "align",
-];
-
 export default EnterExpenses;

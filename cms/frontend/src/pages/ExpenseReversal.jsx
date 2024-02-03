@@ -9,42 +9,45 @@ import { useNavigate } from "react-router-dom";
 const ExpenseReversal = () =>{
     const [regNum,setRegNum] = useState()
     const [classs,setClasss] = useState()
+    const [expenseId,setExpenseId] = useState()
+    const [details,setDetails] = useState()
     const [name,setName] = useState()
     const [form,setForm] = useState(false)
     const navigate = useNavigate()
-    const fetchStudent=async()=>{
+    const fetchExpenses=async()=>{
 
         try
         {
             const response = await axios({
                 method:"get",
             baseURL:"http://localhost:8000/api/",
-            url:`/users/getStudentByRegNum/${regNum}`,
+            url:`/expense/expenses/${expenseId}`,
             })
             setForm(true)
-            console.log(response) 
-            setName(response.data[0].name)
-            setClasss(response.data[0].classs)
+            console.log(response.data[0].exp_type_id) 
+            setDetails(response.data[0])
+
         }
         catch{
             console.log("err")
         }
     
     }
-    const handleUpdate =async()=>{
+    const reverseExpense =async()=>{
         try
         {
             const response = await axios({
-                method:"delete",
+                method:"post",
             baseURL:"http://localhost:8000/api/",
-            url:`/users/terminateStudent/${regNum}`,
+            url:`/expense/expenses/${regNum}`,
+            data:expenseId
             })
-            setForm(true)
+            // setForm(true)
             console.log(response) 
-           toast.success("Student Terminated Successfully")
+           toast.success("Expense Reversal Successfull")
            setTimeout(() => {
             
-            navigate(`/update-options`);
+            navigate(`/`);
           }, 2000);
         }
         catch{
@@ -63,11 +66,11 @@ const ExpenseReversal = () =>{
             <input
               type="number"
               name="regNum"
-              onChange={e=>setRegNum(e.target.value)}
+              onChange={e=>setExpenseId(e.target.value)}
                         />
                         <div className="--my">
             <button
-            onClick={fetchStudent}
+            onClick={fetchExpenses}
               type="submit"
               className="--btn --btn-success"
             >
@@ -76,20 +79,51 @@ const ExpenseReversal = () =>{
             </div>
             {form && <>
                 
-                <h4 style={{fontSize:"medium"}}>Name: {name}</h4>
-                <h4 style={{fontSize:"medium"}}>Current Class: {classs}</h4>
-               
-                <div className="--my">
+                <table className="table">
+          <tbody>
+          <tr>
+               <td>Expense ID</td>
+               <td>{details.exp_type_id}
+                </td>  
+          </tr>
+          
+          <tr>
+               <td>Expense Type</td>
+               <td>{details.expense_type_name}</td>  
+          </tr>
+          
+          <tr>
+               <td>Expense Description</td>
+               <td>{details.expense_desc}</td>  
+          </tr>
+          
+          <tr>
+               <td>Expense Account</td>
+               <td>{details.Acct_type_name}</td>  
+          </tr>
+          
+          <tr>
+               <td>Expense Time</td>
+               <td>{details.expense_record_time}</td>  
+          </tr>
+          <tr>
+               <td>Original Expense Amount</td>
+               <td>{details.expense_amount}</td>  
+          </tr>
+          
+         </tbody>
+         </table>
+     
+            </>}
+            <div className="--my">
             <button
-            onClick={handleUpdate}
+            onClick={reverseExpense}
               type="submit"
               className="--btn --btn-success"
             >
-              Terminate Student
+              Reverse Expense
             </button>
             </div>
-                
-            </>}
             </Card>
             </div>
         </>

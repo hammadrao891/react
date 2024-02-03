@@ -5,6 +5,9 @@ import { CgProfile } from "react-icons/cg";
 import { TbReportSearch } from "react-icons/tb";
 import { AiFillFileAdd } from "react-icons/ai";
 import { GrMoney } from "react-icons/gr";
+import { RiMoneyCnyCircleFill } from "react-icons/ri";
+
+
 import { MdBackup } from "react-icons/md";
 export const menuAdmin = 
 [
@@ -37,7 +40,7 @@ export const menuAD = [
   },
   {
     title: "Expenses",
-    icon: <GrMoney />,
+    icon: <RiMoneyCnyCircleFill />,
     path: "/expenses",
   },
   

@@ -10,24 +10,7 @@ import "./dashboard/Table.scss";
 
 
 const AccountStatusAndHistory = () => {
-  const [subtype, setSubtype] = useState("");
-  const [type,setType]=useState("")
-  const [data,setData]=useState()
-  const [subtypeItem,setSubtypeItem] = useState()
-  const[newItem,setNewItem]= useState()
-  const [quantity, setQuantity] = useState()
-  const [subTypeArray,setSubtypeArray]=useState()
-  const [selectedItem,setSelectedItem] = useState()
-  const [button1,setButton1] = useState(false)
-  const [button2,setButton2] = useState(false)
-  const [regNum,setRegNum] = useState()
-  const [classs,setClasss] = useState()
-  const [table,setTable]=useState(false)
-  const [details,setDetails] = useState()
-  const [newMonthlyFeeDetails,setNewMonthlyFeeDetails] = useState()
-  
-  const navigate = useNavigate()
-  const currentDate = new
+ const currentDate = new
  
   Date();
   const year = currentDate.getFullYear();
@@ -40,17 +23,35 @@ const AccountStatusAndHistory = () => {
   const seconds = String(currentDate.getSeconds()).padStart(2, '0');
   
   const formattedDate = `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+  const [details,setDetails] = useState()
+ 
+  const [transferData,setTransferData]=useState({
+
+    
+    transfer_record_time:formattedDate ,
+    transfer_account_from:null,
+    transfer_account_to: null,
+    fee_collection:null,
+    transfer_by:null,
+    authorized_by:null,
+    transfer_amount:null,
+    reason_for_transfer:null
+    
+  })
+
+  const navigate = useNavigate()
+  
 useEffect(()=>{
-const fetchStudent=async()=>{
+const fetchAccountTypes=async()=>{
 
     try
     {
         const response = await axios({
             method:"get",
-        baseURL:"http://localhost:8000/api/",
-        url:`/fee/getStudents`,
+        baseURL:"http://localhost:8000/api",
+        url:`/expense/account_types`,
         })
-        console.log(response) 
+        console.log(response.data) 
         setDetails(response.data)
     }
     catch{
@@ -58,13 +59,57 @@ const fetchStudent=async()=>{
     }
 
 }
-fetchStudent();
+fetchAccountTypes();
 },[])
 
+const handleInputChange = (e) =>
+{
+     const {name,value} = e.target;
+     console.log(name,value)
+     setTransferData({ ...transferData, [name]:value });
+}
+const handleTransfer = async(req,res) =>
+{
+  if(transferData.transfer_account_from === transferData.transfer_account_to && transferData.transfer_account_from !== null)
+  toast.error("Sending and Receiving Accounts cannot be the same")
+
+  else{
+  
+  try{
+   const res =  await axios({
+      method:"post",
+      baseURL:"http://localhost:8000/api",
+      url:`/expense/transfers`,
+      data:transferData
+    })
+    if(res.data.error)
+    toast.error(res.data.error)
+    else{
+    toast.success("Transfer Successfull!")
+    setTimeout(() => {
+      navigate("/")
+      
+    }, 2000);
+  }
+  }
+  catch(error){
     
+  }
+}
+}
     
+useEffect(()=>{
+
+  if(transferData.transfer_account_from === transferData.transfer_account_to && transferData.transfer_account_from !== null)
+  {  
+    
+    toast.error("Sending and Receiving Accounts cannot be the same")
+  }
+  
+},[transferData])
   return (
     <div className="add-tender">
+    <ToastContainer/>
        <table className="table">
         <thead>
           <th>Account Name</th>
@@ -76,15 +121,18 @@ fetchStudent();
 
         </thead>
         <tbody>
+        {details && details?.map((m)=>
+        
           <tr>
-               <td>1</td>
-               <td>sss</td>
-               <td>sss</td>
-               <td>sss</td>
-               <td>sss</td>
-               <td>sss</td>
+               <td>{m.Acct_type_name}</td>
+               <td>{m.Acct_type_desc}</td>
+               <td>{m.initial_val}</td>
+               <td>{m.initial_Val_set_time}</td>
+               <td>{m.Current_Bal}</td>
+               <td>{m.Current_Bal_Date}</td>
 
           </tr>
+          )}
         </tbody>
        </table>
        <h4>Transfer</h4>
@@ -96,83 +144,47 @@ fetchStudent();
           </tr>
           <tr>
                <td>Transfer Account From</td>
-               <td><select>
-               <option value="NITB Bank Account">NITB Bank Account</option>
-               <option value="Cash IN Hand Account">Cash IN Hand Account</option>
-               <option value="Fee Collection">Fee Collection</option>
-               </select></td>  
+               <td>
+               <select  name="transfer_account_from" onChange={e=>handleInputChange(e)}>
+               <option value={null}>--select--</option>
+               {details && details.map((m)=>
+               <option value={m.Acct_type_id}>{m.Acct_type_name}</option>
+               )}
+               </select>
+               </td>  
           </tr>
           <tr>
                <td>Transfer Account To</td>
-               <td><select>
-               <option value="NITB Bank Account">NITB Bank Account</option>
-               <option value="Cash IN Hand Account">Cash IN Hand Account</option>
-               <option value="Fee Collection">Fee Collection</option>
-               </select></td>  
+               <td>
+               <select name="transfer_account_to" onChange={e=>handleInputChange(e)}>
+               <option value={null}>--select--</option>
+               {details && details.map((m)=>
+               <option value={m.Acct_type_id}>{m.Acct_type_name}</option>
+               )}
+              </select></td>  
           </tr>
           <tr>
                <td>Transfer Amount</td>
-               <td><input /></td>  
+               <td><input type="number" onChange={e=>handleInputChange(e)} name="transfer_amount" /></td>  
           </tr>
           <tr>
                <td>Transfer By</td>
-               <td><input /></td>  
+               <td><input onChange={e=>handleInputChange(e)} name="transfer_by" /></td>  
           </tr>
           <tr>
                <td>Authorized By</td>
-               <td><input /></td>  
+               <td><input onChange={e=>handleInputChange(e)} name="authorized_by" /></td>  
           </tr>
           <tr>
                <td>Reason For Transfer</td>
-               <td><input /></td>  
-          </tr>
-       
-         
-         
-          
+               <td><input onChange={e=>handleInputChange(e)}  name="reason_for_transfer" /></td>  
+          </tr>       
          </tbody>
          </table>
-         <button className="--btn --btn-primary">Submit</button>
+         <button className="--btn --btn-primary" onClick={handleTransfer}>Submit</button>
       {/* </Card> */}
     </div>
   );
 };
-
-AccountStatusAndHistory.modules = {
-  toolbar: [
-    [{ header: "1" }, { header: "2" }, { font: [] }],
-    [{ size: [] }],
-    ["bold", "italic", "underline", "strike", "blockquote"],
-    [{ align: [] }],
-    [{ color: [] }, { background: [] }],
-    [
-      { list: "ordered" },
-      { list: "bullet" },
-      { indent: "-1" },
-      { indent: "+1" },
-    ],
-    ["clean"],
-  ],
-};
-AccountStatusAndHistory.formats = [
-  "header",
-  "font",
-  "size",
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "blockquote",
-  "color",
-  "background",
-  "list",
-  "bullet",
-  "indent",
-  "link",
-  "video",
-  "image",
-  "code-block",
-  "align",
-];
 
 export default AccountStatusAndHistory;

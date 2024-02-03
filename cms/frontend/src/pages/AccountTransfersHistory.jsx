@@ -10,23 +10,9 @@ import "./dashboard/Table.scss";
 
 
 const AccountTransfersHistory = () => {
-  const [subtype, setSubtype] = useState("");
-  const [type,setType]=useState("")
-  const [data,setData]=useState()
-  const [subtypeItem,setSubtypeItem] = useState()
-  const[newItem,setNewItem]= useState()
-  const [quantity, setQuantity] = useState()
-  const [subTypeArray,setSubtypeArray]=useState()
-  const [selectedItem,setSelectedItem] = useState()
-  const [button1,setButton1] = useState(false)
-  const [button2,setButton2] = useState(false)
-  const [regNum,setRegNum] = useState()
-  const [classs,setClasss] = useState()
-  const [table,setTable]=useState(false)
   const [details,setDetails] = useState()
-  const [newMonthlyFeeDetails,setNewMonthlyFeeDetails] = useState()
   
-  const navigate = useNavigate()
+  
 
 useEffect(()=>{
 const fetchStudent=async()=>{
@@ -36,7 +22,7 @@ const fetchStudent=async()=>{
         const response = await axios({
             method:"get",
         baseURL:"http://localhost:8000/api/",
-        url:`/fee/getStudents`,
+        url:`/expense/transfers`,
         })
         console.log(response) 
         setDetails(response.data)
@@ -70,11 +56,11 @@ fetchStudent();
           {details.map((m,index)=>
           <tr key={index}>
                <td>{index+1}</td>
-               <td>{m.regNum}</td>
-               <td>{m.name}</td>
-               <td>{m.fName}</td> 
-               <td>{m.classs}</td>
-               <td>{m.MonthlyFeeDetails}</td>
+               <td>{m.transfer_amount}</td>
+               <td>{m.transfer_account_from_name}</td>
+               <td>{m.transfer_account_to_name}</td> 
+               <td>{m.reason_for_transfer}</td>
+               <td>{m.transfer_record_time}</td>
                
           </tr>
           )}
