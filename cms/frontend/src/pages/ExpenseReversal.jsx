@@ -14,6 +14,7 @@ const ExpenseReversal = () =>{
     const [name,setName] = useState()
     const [form,setForm] = useState(false)
     const navigate = useNavigate()
+    const [expenseReverse,setExpenseReverse] = useState(false)
     const fetchExpenses=async()=>{
 
         try
@@ -24,23 +25,58 @@ const ExpenseReversal = () =>{
             url:`/expense/expenses/${expenseId}`,
             })
             setForm(true)
-            console.log(response.data[0].exp_type_id) 
+            console.log(response.data[0]) 
             setDetails(response.data[0])
-
+             try{
+              const response = await axios({
+                method:"get",
+            baseURL:"http://localhost:8000/api/",
+            url:`/expense/check_exp_id/${expenseId}`,
+            
+            })
+              setExpenseReverse(response.data.exists)
+              console.log(response.data)
+            }
+             catch{} 
         }
         catch{
             console.log("err")
         }
     
     }
+    
     const reverseExpense =async()=>{
+      const currentDate = new
+ 
+      Date();
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+      const day = String(currentDate.getDate()).padStart(2,
+       
+      '0');
+      const hours = String(currentDate.getHours()).padStart(2, '0');
+      const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+      const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+      
+      const formattedDate = `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+    
+    
+      const data = {
+        Acct_type_id : details.Acct_type_id,
+        balance_before: details.current_Bal,
+        balance_after: details.current_Bal + details.expense_amount,
+        expense_amount:details.expense_amount,
+        time:formattedDate,
+        expense_type_id:details.expense_type_id,
+        exp_type_id:expenseId
+      }
         try
         {
             const response = await axios({
                 method:"post",
             baseURL:"http://localhost:8000/api/",
-            url:`/expense/expenses/${regNum}`,
-            data:expenseId
+            url:`/expense/insert_balance_change`,
+            data
             })
             // setForm(true)
             console.log(response) 
@@ -83,7 +119,7 @@ const ExpenseReversal = () =>{
           <tbody>
           <tr>
                <td>Expense ID</td>
-               <td>{details.exp_type_id}
+               <td>{expenseId}
                 </td>  
           </tr>
           
@@ -112,10 +148,10 @@ const ExpenseReversal = () =>{
           </tr>
           
          </tbody>
-         </table>
-     
-            </>}
-            <div className="--my">
+         </table>{
+
+          expenseReverse ? <h3>Expense already Reversed</h3> :
+         <div className="--my">
             <button
             onClick={reverseExpense}
               type="submit"
@@ -123,7 +159,9 @@ const ExpenseReversal = () =>{
             >
               Reverse Expense
             </button>
-            </div>
+            </div>}
+     
+            </>}
             </Card>
             </div>
         </>

@@ -10,23 +10,8 @@ import "./dashboard/Table.scss";
 
 
 const BalanceChangeHistory = () => {
-  const [subtype, setSubtype] = useState("");
-  const [type,setType]=useState("")
-  const [data,setData]=useState()
-  const [subtypeItem,setSubtypeItem] = useState()
-  const[newItem,setNewItem]= useState()
-  const [quantity, setQuantity] = useState()
-  const [subTypeArray,setSubtypeArray]=useState()
-  const [selectedItem,setSelectedItem] = useState()
-  const [button1,setButton1] = useState(false)
-  const [button2,setButton2] = useState(false)
-  const [regNum,setRegNum] = useState()
-  const [classs,setClasss] = useState()
-  const [table,setTable]=useState(false)
   const [details,setDetails] = useState()
-  const [newMonthlyFeeDetails,setNewMonthlyFeeDetails] = useState()
   
-  const navigate = useNavigate()
 
 useEffect(()=>{
 const fetchStudent=async()=>{
@@ -36,7 +21,7 @@ const fetchStudent=async()=>{
         const response = await axios({
             method:"get",
         baseURL:"http://localhost:8000/api/",
-        url:`/fee/getStudents`,
+        url:`/expense/balance_change_history_today`,
         })
         console.log(response) 
         setDetails(response.data)
@@ -54,7 +39,8 @@ fetchStudent();
   return (
     <div className="add-tender">
    {!details ? <h4>Loading...</h4> :<>
-       
+   <h3 style={{textAlign:"center"}}>Balance Change History(Today)</h3>
+      {details.length > 0 ? 
      <table className="table">
           <thead>
             <th>ID</th>
@@ -71,21 +57,25 @@ fetchStudent();
           <tbody>
           {details.map((m,index)=>
           <tr key={index}>
-               <td>{index+1}</td>
-               <td>{m.regNum}</td>
-               <td>{m.name}</td>
-               <td>{m.fName}</td> 
-               <td>{m.classs}</td>
-               <td>{m.MonthlyFeeDetails}</td>
-               <td>{m.previousDue}</td>
-               <td>{m.totalAmountDue}</td>
-               <td>{m.paymentStatus}</td>
-               <td>{m.type}</td>
+               <td>{m.id}</td>
+               <td>{m.Acct_type_name}</td>
+               <td>{m.balance_before}</td>
+               <td>{m.balance_after}</td>
+               <td>{m.feeId}</td> 
+               <td>{m.paidAmount}</td>
+               <td>{m.exp_type_id}</td>
+               <td>{m.expense_amount}</td>
+               <td>{m.time}</td>
+               <td>{m.expense_type_name}</td>
+               
           </tr>)}
+        
          </tbody>
          </table>
-         </>}
-      {/* </Card> */}
+        :
+        <h3 style={{textAlign:"center",fontSize:"40px",marginTop:"20%"}}>No Records</h3>
+        }
+         </>}   {/* </Card> */}
     </div>
   );
 };

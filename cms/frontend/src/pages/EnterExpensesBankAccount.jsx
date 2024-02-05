@@ -86,7 +86,7 @@ console.log(expenseData)
    const res =  await axios({
       method:"post",
       baseURL:"http://localhost:8000/api",
-      url:`/expense/expenses/add`,
+      url:`/expense/expenses`,
       data:expenseData
     })
     console.log(res.data)

@@ -14,7 +14,7 @@ const Header = () => {
     <div className="--pad header">
       <div className="--flex-between">
         <h3>
-          <span className="--fw-thin">Air Foundation School System Chakwal </span>
+          <span style={{fontSize:"30px"}}>Air Foundation School System Chakwal </span>
           {/* <span className="--color-danger">{name}</span> */}
         </h3>
         {/* <button onClick={logout} className="--btn --btn-danger">

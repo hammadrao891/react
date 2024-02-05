@@ -34,13 +34,13 @@ const EnterExpenses = () => {
      
       
        
-      expense_record_time:formattedDate,
+     expense_record_time:formattedDate,
       expense_desc: null,
       expense_amount: null,
       expense_pay_person: null,
       invoice_no: null,
       invoice_file_no: null,
-      expense_pay_account:null,
+      Acct_type_id: null,
       expense_type_id: null,
         
         
@@ -92,7 +92,7 @@ const handleInputChange = (e) =>
      console.log(name,value)
      setExpenseData({ ...expenseData, [name]:value });
 }
-const handleTransfer = async(req,res) =>
+const handleTransfer = async() =>
 {
  
 console.log(expenseData)
@@ -102,10 +102,10 @@ console.log(expenseData)
    const res =  await axios({
       method:"post",
       baseURL:"http://localhost:8000/api",
-      url:`/expense/expenses/add`,
+      url:`/expense/expenses`,
       data:expenseData
     })
-    console.log(res.data)
+    console.log(res,"S")
     if(res.data.error)
     toast.error(res.data.error)
     else{
@@ -114,12 +114,12 @@ console.log(expenseData)
       navigate("/")
       
     }, 2000);
-  }
-  }
+  }}
+  
   catch(error){
     
   
-}
+  }
   }
   else
 {
