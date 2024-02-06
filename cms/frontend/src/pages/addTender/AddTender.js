@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../components/loader/Loader";
 import TenderForm from "../../components/tender/tenderForm/TenderForm";
@@ -18,7 +17,6 @@ const initialState = {
 };
 
 const AddTender = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [tender, setTender] = useState(initialState);
   const [advertisement, setTenderAdvertisement] = useState("");

@@ -38,23 +38,23 @@ const ExpenseReports = () => {
 }, []);
 const handleButton1 = () =>
 {
-    navigate("/update-log")
+    navigate("/today_expense_report")
 }
 
 const handleButton2 = () =>
 {
-    navigate("/update-student-class")
+    navigate("/daily_expense_report")
 }
 const handleButton3 =()=>{
-  navigate("/transfer-whole-class")
+  navigate("/monthly_expense_report")
 }
 
 const handleButton4 =()=>{
-  navigate("/update-dob")
+  navigate("/monthly_expense_report_by_account")
 }
 
 const handleButton5 =()=>{
-  navigate("/update-student-admission-date")
+  navigate("/monthly_expense_report_by_type")
 }
   return (
     <div>

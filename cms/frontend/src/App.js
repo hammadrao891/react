@@ -65,6 +65,11 @@ import TimeTable from "./pages/TimeTable";
 import UpdateTimeTable from "./pages/updateTimeTable";
 import CreateTimeTable from "./pages/CreateTimetable";
 import AddTeacher from "./pages/AddTeacher";
+import MonthlyExpenseReport from "./pages/MonthlyExpenseReport";
+import DailyExpenseReport from "./pages/DailyExpenseReport";
+import TodayExpenseReport from "./pages/TodayExpenseReport";
+import MonthlyExpenseByType from "./pages/MonthlyExpenseByType";
+import MonthlyExpenseByAccount from "./pages/MonthlyExpenseByAccount";
 
 axios.defaults.withCredentials = true;
 
@@ -81,6 +86,61 @@ function App() {
             <Sidebar>
               <Layout>
                 <TimeTable />
+              </Layout>
+            </Sidebar>
+          }
+          
+        />
+          <Route
+          path="/monthly_expense_report"
+          element={
+            <Sidebar>
+              <Layout>
+                <MonthlyExpenseReport />
+              </Layout>
+            </Sidebar>
+          }
+          
+        />
+          <Route
+          path="/daily_expense_report"
+          element={
+            <Sidebar>
+              <Layout>
+                <DailyExpenseReport />
+              </Layout>
+            </Sidebar>
+          }
+          
+        />
+          <Route
+          path="/today_expense_report"
+          element={
+            <Sidebar>
+              <Layout>
+                <TodayExpenseReport />
+              </Layout>
+            </Sidebar>
+          }
+          
+        />
+          <Route
+          path="/monthly_expense_report_by_type"
+          element={
+            <Sidebar>
+              <Layout>
+                <MonthlyExpenseByType />
+              </Layout>
+            </Sidebar>
+          }
+          
+        />
+          <Route
+          path="/monthly_expense_report_by_account"
+          element={
+            <Sidebar>
+              <Layout>
+                <MonthlyExpenseByAccount />
               </Layout>
             </Sidebar>
           }

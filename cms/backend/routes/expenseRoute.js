@@ -244,6 +244,7 @@ router.post('/transfers', (req, res) => {
     });
   })
 
+
   router.post("/expenses/:expense_id",(req,res)=>{
     const query = 'SELECT * FROM expense_types';
   
@@ -732,6 +733,150 @@ WHERE
     }
 
     res.status(200).json(results);
+  });
+});
+router.get('/today', (req, res) => {
+  const timeDate = new Date();
+  var month
+  var date
+  if(timeDate.getDate() < 9){
+   date = "0" + (timeDate.getDate() ) ;
+  }
+  else
+  date = (timeDate.getDate() ) ;
+  console.log(date)
+  if(timeDate.getMonth() < 9){
+    month = "0" + (timeDate.getMonth() + 1 ) ;
+   }
+   else
+   month = (timeDate.getMonth() +1 ) ;
+  var year = timeDate.getFullYear()
+  
+  // Query to fetch expenses
+  const sql = `
+  SELECT e.*, et.expense_type_name, at.Acct_type_name 
+  FROM expenses e 
+  INNER JOIN expense_types et ON e.expense_type_id = et.expense_type_id
+  INNER JOIN account_types at ON e.Acct_type_id = at.Acct_type_id
+  WHERE 
+  CONCAT(SUBSTRING(e.expense_record_time, 1, 1), SUBSTRING(e.expense_record_time, 2, 1)) = ? and 
+  CONCAT(SUBSTRING(e.expense_record_time, 4, 1), SUBSTRING(e.expense_record_time, 5, 1)) = ? and 
+  CONCAT(SUBSTRING(e.expense_record_time, 7, 1), SUBSTRING(e.expense_record_time, 8, 1), SUBSTRING(e.expense_record_time, 9, 1), SUBSTRING(e.expense_record_time, 10, 1)) = ?
+  `;
+  const values = [date,month,year]
+  // Execute the query
+  db.query(sql,values, (err, results) => {
+    if (err) {
+      console.error('Error executing MySQL query:', err);
+      res.status(500).json({ error: 'Internal server error' });
+      return;
+    }
+    res.json(results);
+  });
+});
+router.get('/:date/:month/:year', (req, res) => {
+ 
+
+  const {date,month,year} = req.params
+  // Query to fetch expenses
+  const sql = `
+    
+  SELECT e.*, et.expense_type_name, at.Acct_type_name 
+  FROM expenses e 
+  INNER JOIN expense_types et ON e.expense_type_id = et.expense_type_id
+  INNER JOIN account_types at ON e.Acct_type_id = at.Acct_type_id WHERE 
+    CONCAT(SUBSTRING(expense_record_time, 1, 1), SUBSTRING(expense_record_time, 2, 1)) = ? and 
+    CONCAT(SUBSTRING(expense_record_time, 4, 1), SUBSTRING(expense_record_time, 5, 1)) = ? and 
+    CONCAT(SUBSTRING(expense_record_time, 7, 1), SUBSTRING(expense_record_time, 8, 1), SUBSTRING(expense_record_time, 9, 1), SUBSTRING(expense_record_time, 10, 1))=?
+  `;
+  const values = [date,month,year]
+  // Execute the query
+  db.query(sql,values, (err, results) => {
+    if (err) {
+      console.error('Error executing MySQL query:', err);
+      res.status(500).json({ error: 'Internal server error' });
+      return;
+    }
+    res.json(results);
+  });
+});
+router.get('/:month/:year', (req, res) => {
+ 
+
+  const {month,year} = req.params
+  console.log(req.params)
+  // Query to fetch expenses
+  const sql = `
+  SELECT e.*, et.expense_type_name, at.Acct_type_name 
+  FROM expenses e 
+  INNER JOIN expense_types et ON e.expense_type_id = et.expense_type_id
+  INNER JOIN account_types at ON e.Acct_type_id = at.Acct_type_id WHERE
+    CONCAT(SUBSTRING(expense_record_time, 4, 1), SUBSTRING(expense_record_time, 5, 1)) = ? and 
+    CONCAT(SUBSTRING(expense_record_time, 7, 1), SUBSTRING(expense_record_time, 8, 1), SUBSTRING(expense_record_time, 9, 1), SUBSTRING(expense_record_time, 10, 1))=?
+  `;
+  const values = [month,year]
+  // Execute the query
+  db.query(sql,values, (err, results) => {
+    if (err) {
+      console.error('Error executing MySQL query:', err);
+      res.status(500).json({ error: 'Internal server error' });
+      return;
+    }
+    res.json(results);
+  });
+});
+router.get('/expenses_by_account_type/:month/:year/:Acct_type_id', (req, res) => {
+ 
+
+  const {month,year,Acct_type_id} = req.params
+  console.log(req.params)
+  // Query to fetch expenses
+  const sql = ` SELECT e.*, a.Acct_type_name ,et.expense_type_name
+    FROM expenses e 
+    INNER JOIN account_types a ON e.Acct_type_id = a.Acct_type_id
+    INNER JOIN expense_types et ON e.expense_type_id = et.expense_type_id
+    WHERE 
+    
+    CONCAT(SUBSTRING(e.expense_record_time, 4, 1), SUBSTRING(e.expense_record_time, 5, 1)) = ? and 
+    CONCAT(SUBSTRING(e.expense_record_time, 7, 1), SUBSTRING(e.expense_record_time, 8, 1), SUBSTRING(e.expense_record_time, 9, 1), SUBSTRING(e.expense_record_time, 10, 1)) = ? and 
+    e.Acct_type_id = ?`;
+  const values = [month,year,Acct_type_id]
+  console.log(values)
+  // Execute the query
+  db.query(sql,values, (err, results) => {
+    if (err) {
+      console.error('Error executing MySQL query:', err);
+      res.status(500).json({ error: 'Internal server error' });
+      return;
+    }
+    console.log(results)
+    res.json(results);
+  });
+});
+router.get('/expenses_by_expense_type/:month/:year/:expense_type_id', (req, res) => {
+ 
+
+  const {month,year,expense_type_id} = req.params
+  console.log(req.params)
+  // Query to fetch expenses
+  const sql = `  SELECT e.*, et.expense_type_id ,et.expense_type_name,at.Acct_type_name 
+  FROM expenses e 
+  INNER JOIN expense_types et ON e.expense_type_id = et.expense_type_id 
+  INNER JOIN account_types at ON e.Acct_type_id = at.Acct_type_id 
+  WHERE 
+  
+  CONCAT(SUBSTRING(e.expense_record_time, 4, 1), SUBSTRING(e.expense_record_time, 5, 1)) = ? and 
+  CONCAT(SUBSTRING(e.expense_record_time, 7, 1), SUBSTRING(e.expense_record_time, 8, 1), SUBSTRING(e.expense_record_time, 9, 1), SUBSTRING(e.expense_record_time, 10, 1)) = ? and 
+  e.expense_type_id  = ?`;
+  const values = [month,year,expense_type_id]
+  // Execute the query
+  db.query(sql,values, (err, results) => {
+    if (err) {
+      console.error('Error executing MySQL query:', err);
+      res.status(500).json({ error: 'Internal server error' });
+      return;
+    }
+    res.json(results);
   });
 });
 module.exports=router
