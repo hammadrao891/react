@@ -94,7 +94,10 @@ const markAttendance = asyncHandler(async(req,res)=>{
   
 const getCLassStudent = asyncHandler(async(req,res)=>{
   const {classs} = req.params;
-  const q = "select * from students where classs=?";
+  const q = `SELECT students.*, class_names.class_name
+  FROM students
+  INNER JOIN class_names ON students.classs = class_names.class_id
+  WHERE students.classs = ?`;
   const values = [classs]
   console.log(classs)
   db.query(q,values,(err,data)=>{
@@ -105,7 +108,10 @@ const getCLassStudent = asyncHandler(async(req,res)=>{
 })
 const getStudentByRegNum = asyncHandler(async(req,res)=>{
   const {regNum} = req.params;
-  const q = "select * from students where regNum=?";
+  const q = `  SELECT students.*, class_names.class_name
+  FROM students
+  INNER JOIN class_names ON students.classs = class_names.class_id
+  WHERE students.regNum = ?`;
   const values = [regNum]
   console.log(regNum)
   db.query(q,values,(err,data)=>{
@@ -577,9 +583,10 @@ const updateStudent =asyncHandler((req, res) => {
     const regNum = req.params.regNum;
     const studentData = req.body;
   console.log(studentData)
+  const {class_id,class_name,...data} =studentData
     // Execute the SQL query to update student details
     const query = 'UPDATE students SET ? WHERE regNum = ?';
-    db.query(query, [studentData, regNum], (err, result) => {
+    db.query(query, [data, regNum], (err, result) => {
       if (err) {
         console.error('Error executing query: ' + err.stack);
         res.status(500).json({ error: 'Internal Server Error' });

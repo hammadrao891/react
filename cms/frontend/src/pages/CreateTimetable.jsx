@@ -18,12 +18,35 @@ const CreateTimeTable = () => {
   const[classs,setClasss]=useState()
   const[toggle,setToggle]=useState(false)
   const[classTeacher,setClassTeacher]=useState()
+  const [classDetails,setClassDetails] = useState()
   const navigate=useNavigate()
 
     const [updatedClasses,setUpdatedClasses] = useState()
   // Function to handle click on th or td
   const timeArr = ['7:00','7:40','8:20','9:00','9:40','10:40','11:20']
+  useEffect(() => {
+   
+    const fetchClasses=async()=>{
   
+      try
+      {
+          const response = await axios({
+              method:"get",
+          baseURL:"http://localhost:8000/api/",
+          url:`/class/class_names`,
+          })
+          console.log(response) 
+          setClassDetails(response.data)
+      }
+      catch{
+          console.log("err")
+      }
+  
+  }
+  if(!classDetails)
+  fetchClasses();
+  },[classDetails])
+
 
   useEffect(()=>{
     const getTeachers=async()=>{
@@ -173,28 +196,13 @@ console.log(day)
     <h2>Create TimeTable</h2>
       <label style={{color:"black",fontSize:"small"}}>Select Class:</label>
         <select className='form-control form-control-lg' onChange={e=>handleClass(e)} name="classs" >
-            <option>--select class--</option>
-            <option value="Play Group">Play Group</option>
-            <option value="Nursery Green">Nursery Green</option>
-            <option value="Nursery Blue">Nursery Blue</option>
-            <option value="KG-Red">KG-Red</option>
-            <option value="KG-Yellow">KG-Yellow</option>
-            <option value="1-Red">1-Red</option>
-            <option value="1-Yellow">1-Yellow</option>
-            <option value="2-Red">2-Red</option>
-            <option value="2-Yellow">2-Yellow</option>
-            <option value="2-Green">2-Green</option>
-            <option value="3-Red">3-Red</option>
-            <option value="3-Yellow">3-Yellow</option>
-            <option value="4-Red">4-Red</option>
-            <option value="4-Yellow">4-Yellow</option>
-            <option value="4-Green">4-Green</option>
-            <option value="5-Red">5-Red</option>
-            <option value="5-Yellow">5-Yellow</option>
-            <option value="6-Red">6-Red</option>
-            <option value="6-Yellow">6-Yellow</option>
-            <option value="7-Red">7-Red</option>
-            
+        <option>--select class--</option>
+           {
+            classDetails?.map((m)=>
+            <option value={m.class_id}>{m.class_name}</option>
+            )
+           }      
+        
         </select>
         
         

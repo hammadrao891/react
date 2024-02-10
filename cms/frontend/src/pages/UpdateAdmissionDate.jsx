@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 const UpdateAdmissionDate = () =>{
     const [regNum,setRegNum] = useState()
     const [admissionDate,setAdmissionDate] = useState()
-    const [newDob,setNewDob] = useState()
+    const [newAdmissionDate,setNewAdmissionDate] = useState()
     const [name,setName] = useState()
     const [form,setForm] = useState(false)
     const navigate = useNavigate()
@@ -39,7 +39,7 @@ const UpdateAdmissionDate = () =>{
                 method:"put",
             baseURL:"http://localhost:8000/api/",
             url:`/users/updateAdmissionDate/${regNum}`,
-            data:{admissionDate}
+            data:{admissionDate:newAdmissionDate}
             })
             setForm(true)
             console.log(response) 
@@ -85,7 +85,7 @@ const UpdateAdmissionDate = () =>{
                         </tr>
                         <tr>
                             <td> <h4 style={{fontSize:"medium"}}>Select New Admission Date: </h4></td>
-                            <td><input type="date" onChange={e=>setAdmissionDate(e.target.value)}/></td>
+                            <td><input type="date" onChange={e=>setNewAdmissionDate(e.target.value)}/></td>
                         </tr>
                     </tbody>
                 </table>

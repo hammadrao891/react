@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import Card from "../components/card/Card";
 import axios from "axios";
@@ -8,10 +8,38 @@ import { useNavigate } from "react-router-dom";
 
 const UpdateStudentClass = () =>{
     const [regNum,setRegNum] = useState()
-    const [classs,setClasss] = useState()
+    const [currentClasss,setCurrentClasss] = useState()
+    const[classs,setClasss] = useState()
     const [name,setName] = useState()
     const [form,setForm] = useState(false)
+    const [classDetails,setClassDetails] = useState()
     const navigate = useNavigate()
+
+
+
+    useEffect(() => {
+   
+        const fetchClasses=async()=>{
+      
+          try
+          {
+              const response = await axios({
+                  method:"get",
+              baseURL:"http://localhost:8000/api/",
+              url:`/class/class_names`,
+              })
+              console.log(response) 
+              setClassDetails(response.data)
+          }
+          catch{
+              console.log("err")
+          }
+      
+      }
+      if(!classDetails)
+      fetchClasses();
+      },[classDetails])
+
     const fetchStudent=async()=>{
 
         try
@@ -21,10 +49,11 @@ const UpdateStudentClass = () =>{
             baseURL:"http://localhost:8000/api/",
             url:`/users/getStudentByRegNum/${regNum}`,
             })
-            setForm(true)
+            
             console.log(response) 
+            setForm(true)
             setName(response.data[0].name)
-            setClasss(response.data[0].classs)
+            setCurrentClasss(response.data[0].class_name)
         }
         catch{
             console.log("err")
@@ -77,30 +106,17 @@ const UpdateStudentClass = () =>{
             {form && <>
                 
                 <h4 style={{fontSize:"medium"}}>Name: {name}</h4>
-                <h4 style={{fontSize:"medium"}}>Current Class: {classs}</h4>
+                <h4 style={{fontSize:"medium"}}>Current Class: {currentClasss}</h4>
                 <h4 style={{fontSize:"medium"}}>Modify Class Select: <select onChange={e=>setClasss(e.target.value)}>
                 <option>--select class--</option>
-          <option value="Play Group">Play Group</option>
-          <option value="Nursery Green">Nursery Green</option>
-          <option value="Nursery Blue">Nursery Blue</option>
-          <option value="KG-Red">KG-Red</option>
-          <option value="KG-Yellow">KG-Yellow</option>
-          <option value="1-Red">1-Red</option>
-          <option value="1-Yellow">1-Yellow</option>
-          <option value="2-Red">2-Red</option>
-          <option value="2-Yellow">2-Yellow</option>
-          <option value="2-Green">2-Green</option>
-          <option value="3-Red">3-Red</option>
-          <option value="3-Yellow">3-Yellow</option>
-          <option value="4-Red">4-Red</option>
-          <option value="4-Yellow">4-Yellow</option>
-          <option value="4-Green">4-Green</option>
-          <option value="5-Red">5-Red</option>
-          <option value="5-Yellow">5-Yellow</option>
-          <option value="6-Red">6-Red</option>
-          <option value="6-Yellow">6-Yellow</option>
-          <option value="7-Red">7-Red</option>
-                </select></h4>
+           {
+            classDetails?.map((m)=>
+            <option value={m.class_id}>{m.class_name}</option>
+            )
+           } 
+          
+    
+          </select></h4>
                 <div className="--my">
             <button
             onClick={handleUpdate}

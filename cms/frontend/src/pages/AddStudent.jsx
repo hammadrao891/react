@@ -9,18 +9,31 @@ import "./AddStudent.css"
 // import "../tenderForm/TenderForm.scss";
 
 const AddStudent = () => {
-  const [subtype, setSubtype] = useState("");
-  const [type,setType]=useState("")
-  const [data,setData]=useState()
-  const [subtypeItem,setSubtypeItem] = useState()
-  const[newItem,setNewItem]= useState()
-  const [selectedItem,setSelectedItem] = useState()
+  const [classDetails,setClassDetails] = useState()
   const navigate = useNavigate()
   useEffect(() => {
-    // Reset subtype when category type changes
-    setSubtype("");
-  }, []);
+   
+    const fetchClasses=async()=>{
 
+      try
+      {
+          const response = await axios({
+              method:"get",
+          baseURL:"http://localhost:8000/api/",
+          url:`/class/class_names`,
+          })
+          console.log(response) 
+          setClassDetails(response.data)
+      }
+      catch{
+          console.log("err")
+      }
+  
+  }
+  if(!classDetails)
+  fetchClasses();
+  },[classDetails])
+  
 const [studentData,setStudentData] = useState({
     name:'',regNum:null,admissionDate:'',classs:'',current_fee_month:null,current_fee_year:null,fName:'',address:'',contact:null,MonthlyFeeDetails:null,mName:'',officeName:'',monthlyFee:null,fCnic:'',mCnic:'',homeLandmark:'',officeLandmark:'',village:'',homeContact:null,workContact:null,admissionFee:null,securityDeposit:null,annualCharges:null,fOccupation:null,mOccupation:'',dob:null,gender:''
 })
@@ -36,8 +49,10 @@ const [studentData,setStudentData] = useState({
         data:studentData
     })
     toast.success("Student Registered Successfully!")
-
-    navigate("/")
+    setTimeout(() => {
+      navigate("/")  
+    }, 2000);
+    
    } 
    const handleInputChange = (e) =>
    {
@@ -98,26 +113,11 @@ const [studentData,setStudentData] = useState({
           <div className="input-data" >
           <select className="" onChange={e=>handleInputChange(e)} name="classs" >
             <option></option>
-            <option value="Play Group">Play Group</option>
-            <option value="Nursery Green">Nursery Green</option>
-            <option value="Nursery Blue">Nursery Blue</option>
-            <option value="KG-Red">KG-Red</option>
-            <option value="KG-Yellow">KG-Yellow</option>
-            <option value="1-Red">1-Red</option>
-            <option value="1-Yellow">1-Yellow</option>
-            <option value="2-Red">2-Red</option>
-            <option value="2-Yellow">2-Yellow</option>
-            <option value="2-Green">2-Green</option>
-            <option value="3-Red">3-Red</option>
-            <option value="3-Yellow">3-Yellow</option>
-            <option value="4-Red">4-Red</option>
-            <option value="4-Yellow">4-Yellow</option>
-            <option value="4-Green">4-Green</option>
-            <option value="5-Red">5-Red</option>
-            <option value="5-Yellow">5-Yellow</option>
-            <option value="6-Red">6-Red</option>
-            <option value="6-Yellow">6-Yellow</option>
-            <option value="7-Red">7-Red</option>
+           {
+            classDetails?.map((m)=>
+            <option value={m.class_id}>{m.class_name}</option>
+            )
+           }
             </select>
             <div className="underline" ></div>
             <label htmlFor=""  style={{bottom:"33px",color:studentData.classs && "#3498db"}}>Class</label>

@@ -51,7 +51,7 @@ const fetchStudent=async()=>{
         const response = await axios({
             method:"get",
         baseURL:"http://localhost:8000/api/",
-        url:`/fee/student-details-previousDue/${regNum}`,
+        url:`/users/getStudentByRegNum/${regNum}`,
         })
         setTable(true)
         console.log(response) 
@@ -205,7 +205,7 @@ const updateFee=async()=>{
           <td>{m.regNum}</td>
           <td>{m.name}</td>
           <td>{m.fName}</td>
-          <td>{m.classs}</td>
+          <td>{details[0].class_name}</td>
           <td>{m.feeMonth}</td>
           <td>{m.paidAmount}</td>
           <td>{m.fine}</td>

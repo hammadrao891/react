@@ -5,6 +5,7 @@ const userRoute = require("./routes/userRoute");
 const feeRoute = require("./routes/feeRoute");
 const expenseRoute = require("./routes/expenseRoute");
 const timeTableRoute = require("./routes/timeTableRouter");
+const classRoute = require("./routes/classRoute");
 
 const cookieParser = require("cookie-parser");
 const cors = require("cors")
@@ -29,6 +30,7 @@ app.use("/api/users", userRoute);
 app.use("/api/fee",feeRoute)
 app.use("/api/timeTable",timeTableRoute)
 app.use("/api/expense",expenseRoute)
+app.use("/api/class",classRoute)
 // Routes
 app.get("/", (req, res) => {
   res.send("Home Page");

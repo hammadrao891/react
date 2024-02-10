@@ -10,21 +10,14 @@ import "./dashboard/Table.scss";
 
 
 const CheckStudentInfo = () => {
-  const [subtype, setSubtype] = useState("");
-  const [type,setType]=useState("")
-  const [data,setData]=useState()
-  const [subtypeItem,setSubtypeItem] = useState()
-  const[newItem,setNewItem]= useState()
-  const [quantity, setQuantity] = useState()
-  const [subTypeArray,setSubtypeArray]=useState()
-  const [selectedItem,setSelectedItem] = useState()
   const [button1,setButton1] = useState(false)
   const [button2,setButton2] = useState(false)
   const [regNum,setRegNum] = useState()
   const [classs,setClasss] = useState()
   const [table,setTable]=useState(false)
   const [details,setDetails] = useState()
-  const navigate = useNavigate()
+  const [classDetails,setClassDetails] = useState()
+  
 
 
 const handleButton1 =()=>{
@@ -35,6 +28,29 @@ const handleButton2 =()=>{
     setButton1(false)
     setButton2(true)
 }
+useEffect(() => {
+   
+  const fetchClasses=async()=>{
+
+    try
+    {
+        const response = await axios({
+            method:"get",
+        baseURL:"http://localhost:8000/api/",
+        url:`/class/class_names`,
+        })
+        console.log(response) 
+        setClassDetails(response.data)
+    }
+    catch{
+        console.log("err")
+    }
+
+}
+if(!classDetails)
+fetchClasses();
+},[classDetails])
+
 const fetchStudent=async()=>{
 
     try
@@ -112,28 +128,12 @@ const fetchStudents=async()=>{
         <>
         <label style={{color:"black",fontSize:"small"}}>Select Class:</label>
         <select onChange={e=>setClasss(e.target.value)} name="classs" >
-            <option>--select class--</option>
-            <option value="Play Group">Play Group</option>
-            <option value="Nursery Green">Nursery Green</option>
-            <option value="Nursery Blue">Nursery Blue</option>
-            <option value="KG-Red">KG-Red</option>
-            <option value="KG-Yellow">KG-Yellow</option>
-            <option value="1-Red">1-Red</option>
-            <option value="1-Yellow">1-Yellow</option>
-            <option value="2-Red">2-Red</option>
-            <option value="2-Yellow">2-Yellow</option>
-            <option value="2-Green">2-Green</option>
-            <option value="3-Red">3-Red</option>
-            <option value="3-Yellow">3-Yellow</option>
-            <option value="4-Red">4-Red</option>
-            <option value="4-Yellow">4-Yellow</option>
-            <option value="4-Green">4-Green</option>
-            <option value="5-Red">5-Red</option>
-            <option value="5-Yellow">5-Yellow</option>
-            <option value="6-Red">6-Red</option>
-            <option value="6-Yellow">6-Yellow</option>
-            <option value="7-Red">7-Red</option>
-            
+             <option>--select class--</option>
+           {
+            classDetails?.map((m)=>
+            <option value={m.class_id}>{m.class_name}</option>
+            )
+           } 
         </select>
         <button
             onClick={fetchStudents}
@@ -186,7 +186,7 @@ const fetchStudents=async()=>{
                 <td>{student.regNum}</td>
                 <td>{student.name}</td>
                 <td>{student.gender}</td>
-                <td>{student.classs}</td>
+                <td>{student.class_name}</td>
                 <td>{student.dob}</td>
                 <td>{student.MonthlyFeeDetails}</td>
                 <td>{student.fName}</td>

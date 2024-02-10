@@ -10,14 +10,6 @@ import "./dashboard/Table.scss";
 
 
 const UpdateLog = () => {
-  const [subtype, setSubtype] = useState("");
-  const [type,setType]=useState("")
-  const [data,setData]=useState()
-  const [subtypeItem,setSubtypeItem] = useState()
-  const[newItem,setNewItem]= useState()
-  const [quantity, setQuantity] = useState()
-  const [subTypeArray,setSubtypeArray]=useState()
-  const [selectedItem,setSelectedItem] = useState()
   const [button1,setButton1] = useState(false)
   const [button2,setButton2] = useState(false)
   const [regNum,setRegNum] = useState()
@@ -25,27 +17,43 @@ const UpdateLog = () => {
   const [table,setTable]=useState(false)
   const [details,setDetails] = useState()
   const [form,setForm] = useState(false)
+  const [classDetails,setClassDetails] = useState()
   const navigate = useNavigate()
+
 
   const [studentData,setStudentData] = useState({
     name:'',regNum:null,classs:'',current_fee_month:null,current_fee_year:null,fName:'',address:'',contact:null,MonthlyFeeDetails:null,mName:'',officeName:'',monthlyFee:null,fCnic:'',mCnic:'',homeLandmark:'',officeLandmark:'',village:'',homeContact:null,workContact:null,admissionFee:null,securityDeposit:null,annualCharges:null,fOccupation:null,mOccupation:'',dob:null,gender:''
 })
 
-const handleButton1 =()=>{
-    setButton2(false)
-    setButton1(true)
+
+useEffect(() => {
+   
+  const fetchClasses=async()=>{
+
+    try
+    {
+        const response = await axios({
+            method:"get",
+        baseURL:"http://localhost:8000/api/",
+        url:`/class/class_names`,
+        })
+        console.log(response) 
+        setClassDetails(response.data)
+    }
+    catch{
+        console.log("err")
+    }
+
 }
-const handleButton2 =()=>{
-    setButton1(false)
-    setButton2(true)
-}
+if(!classDetails)
+fetchClasses();
+},[classDetails])
 const handleInputChange=(e)=>{
     const {name,value} = e.target;
     console.log(name,value)
     setStudentData({ ...studentData, [name]:value });
 }
 const fetchStudent=async()=>{
-  
     try
     {
 
@@ -75,12 +83,11 @@ const updateStudentdetails=async(e)=>{
         baseURL:"http://localhost:8000/api/",
         url:`/users/students/${regNum}`,
         data:studentData
-        })
-        setForm(true)
-        console.log(response) 
-        setStudentData(response.data[0])
+        }) 
         toast.success("Details Updated Successfully!")
-        navigate("/update-options")
+        setTimeout(() => {
+          navigate("/update-options")
+        }, 2000);
     }
     catch{
         console.log("err")
@@ -137,27 +144,12 @@ const updateStudentdetails=async(e)=>{
 </div>
 <label>Class:</label>
       <select onChange={handleInputChange} value={studentData.classs} name="classs" >
-          <option>--select class--</option>
-          <option value="Play Group">Play Group</option>
-          <option value="Nursery Green">Nursery Green</option>
-          <option value="Nursery Blue">Nursery Blue</option>
-          <option value="KG-Red">KG-Red</option>
-          <option value="KG-Yellow">KG-Yellow</option>
-          <option value="1-Red">1-Red</option>
-          <option value="1-Yellow">1-Yellow</option>
-          <option value="2-Red">2-Red</option>
-          <option value="2-Yellow">2-Yellow</option>
-          <option value="2-Green">2-Green</option>
-          <option value="3-Red">3-Red</option>
-          <option value="3-Yellow">3-Yellow</option>
-          <option value="4-Red">4-Red</option>
-          <option value="4-Yellow">4-Yellow</option>
-          <option value="4-Green">4-Green</option>
-          <option value="5-Red">5-Red</option>
-          <option value="5-Yellow">5-Yellow</option>
-          <option value="6-Red">6-Red</option>
-          <option value="6-Yellow">6-Yellow</option>
-          <option value="7-Red">7-Red</option>
+      <option>--select class--</option>
+           {
+            classDetails?.map((m)=>
+            <option value={m.class_id}>{m.class_name}</option>
+            )
+           } 
           
       </select>
            <label>DOB:</label>

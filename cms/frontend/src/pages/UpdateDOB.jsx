@@ -39,7 +39,7 @@ const UpdateDOB = () =>{
                 method:"put",
             baseURL:"http://localhost:8000/api/",
             url:`/users/updateDob/${regNum}`,
-            data:{dob}
+            data:{dob:newDob}
             })
             setForm(true)
             console.log(response) 
@@ -85,7 +85,7 @@ const UpdateDOB = () =>{
                         </tr>
                         <tr>
                             <td> <h4 style={{fontSize:"medium"}}>Select New Date of Birth: </h4></td>
-                            <td><input type="date" onChange={e=>setDob(e.target.value)}/></td>
+                            <td><input type="date" onChange={e=>setNewDob(e.target.value)}/></td>
                         </tr>
                     </tbody>
                 </table>
