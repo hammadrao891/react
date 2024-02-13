@@ -12,7 +12,6 @@ const Sidebar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
   const toggle = () => setIsOpen(!isOpen);
   const navigate = useNavigate();
-const {user}=useContext(AuthContext)
   const goHome = () => {
     navigate("/");
   };

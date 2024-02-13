@@ -48,8 +48,9 @@ setClasses(response.data.classes)
 setToggle(true)
 } catch{}
 }
+const times = ['7:00','7:40','8:20','9:00','10:00','10:40','11:20']
   return (
-    <div className="">
+    <div className="" >
       <div style={{display:"flex",justifyContent:"space-between"}}><h1 className='text-center'>Timetables</h1>
       <div style={{display:"flex",justifyContent:"space-between"}}>
       <button   onClick={ ()=>navigate("/update-timetable")} className="--btn --btn-success">Update TimeTable</button>
@@ -57,7 +58,7 @@ setToggle(true)
       <button  onClick={ ()=>navigate("/add-teacher")} className="--btn --btn-success">Add Teacher</button>
       </div>
       </div>
- <div class="" style={{width:"100em"}}  >
+ <div class="" style={{width:"100%"}}  >
     <h3>Class Teacher: {}</h3>
   <label style={{color:"black",fontSize:"large"}}>Select Class:</label>
         <select style={{fontSize:"small"}} onChange={e=>setClasss(e.target.value)} name="classs" >
@@ -72,55 +73,85 @@ setToggle(true)
      
            {
             toggle && <>
-          <div class="table-responsive" style={{width:"100%"}}>
-                    <table class="tableL table-bordered text-center" >
+          <div class="table-responsive" style={{display:"flex",justifyContent:"center"}}>
+                    <table class="tableL table-bordered text-center" style={{width:"50%",height:"50%",fontSize:"15px"}} >
                         <thead>
                             <tr class="bg-light-gray">
                                 <th class="text-uppercase text-primary ">Time
                                 </th>
-                                <th class="text-uppercase text-primary">7:00</th>
-                                <th class="text-uppercase text-primary">7:40</th>
-                                <th class="text-uppercase text-primary">8:20</th>
-                                <th class="text-uppercase text-primary">9:00</th>
-                                <th class="text-uppercase text-primary">9:40</th>
-                                <th class="text-uppercase text-primary">10:40</th>
-                                <th class="text-uppercase text-primary">11:20</th>
+                                {times.map(m=>
+                                  <th class="text-uppercase text-primary">{m}</th>
+                                )}
+                                
+                               
                             </tr>
                         </thead>
                         <tbody>
                         <tr>
                           <td className='align-middle text-primary'>Monday</td>
-                        {classes && classes.Monday?.map((m)=>
+                          {times.map((time, index) => (
+                      <td key={index}>
+                      <span class="bg-green padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">
+                        {classes && classes?.Monday?.find(item => item.time_slot === time) ? 
+                          classes.Monday.find(item => item.time_slot === time).class_name : '-'}
+                          </span>
+                      </td>
+                    ))}
+
+                        {/* {classes && classes.Monday?.map((m)=>
                            <td><span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">{m.class_name}</span></td>
-                          )}
+                          )} */}
 
                         </tr>
                         <tr>
                           <td className='align-middle text-primary'>Tuesday</td>
-                        {classes && classes.Tuesday?.map((m)=>
-                          <td><span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">{m.class_name}</span></td>
-                          )}
+                      {times.map((time, index) => (
+                      <td key={index}>
+                      <span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">
+                        {classes && classes?.Tuesday?.find(item => item.time_slot === time) ? 
+                          classes.Tuesday.find(item => item.time_slot === time).class_name : '-'}
+                          </span>
+                      </td>
+                    ))}
 
+      
                         </tr>
                         <tr>
-                          <td className='align-middle text-primary'>Wednesday</td>
-                        {classes && classes.Wednesday?.map((m)=>
-                          <td><span class="bg-sky padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">{m.class_name}</span></td>
-                          )}
+                        <td className='align-middle text-primary'>Wednesday</td>
+                        {times.map((time, index) => (
+                      <td key={index}>
+                      <span class="bg-sky padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">
+                        {classes && classes?.Wednesday?.find(item => item.time_slot === time) ? 
+                          classes.Wednesday.find(item => item.time_slot === time).class_name : '-'}
+                          </span>
+                      </td>
+                    ))}
 
+      
                         </tr>
                         <tr>
                           <td className='align-middle text-primary'>Thursday</td>
-                        {classes && classes.Thursday?.map((m)=>
-                          <td><span class="bg-purple padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">{m.class_name}</span></td>
-                          )}
+                          {times.map((time, index) => (
+                      <td key={index}>
+                      <span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">
+                        {classes && classes?.Thursday?.find(item => item.time_slot === time) ? 
+                          classes.Thursday.find(item => item.time_slot === time).class_name : '-'}
+                          </span>
+                      </td>
+                    ))}
 
                         </tr>
                         <tr>
-                          <td className='align-middle text-primary'>Friday</td>
-                        {classes && classes.Friday?.map((m)=>
-                          <td><span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">{m.class_name}</span></td>
-                          )}
+                        <td className='align-middle text-primary'>Friday</td>
+                        {times.map((time, index) => (
+                      <td key={index}>
+                      <span class="bg-purple padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">
+                        {classes && classes?.Friday?.find(item => item.time_slot === time) ? 
+                          classes.Friday.find(item => item.time_slot === time).class_name : '-'}
+                          </span>
+                      </td>
+                    ))}
+
 
                         </tr>
  

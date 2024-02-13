@@ -124,12 +124,7 @@ if (indexToUpdateExists) {
 console.log(day)
     
 
-    // arr[index]=value
-    // setUpdatedClasses(updatedClasses)
-    // setClasses(updatedClasses);
-    
-    // console.log(name,value)
-    // setStudentData({ ...studentData, [name]:value });
+   
 }
   }
   
@@ -175,7 +170,7 @@ console.log(day)
         }
       )
     console.log(response.data)
-    if(!response.data.classes.Monday)
+    if(response.data.classes !== null)
     {
     setClasss(e.target.value)
     setToggle(true)
@@ -189,6 +184,7 @@ console.log(day)
   
       catch{}
     }
+    const times = ['7:00','7:40','8:20','9:00','10:00','10:40','11:20']
   return (
     <div className="timetable-container">
     <ToastContainer/>
@@ -217,7 +213,7 @@ console.log(day)
         <select className='form-control form-control-lg' onChange={e=>handleClassTeacher(e)}>
         <option>--select teacher--</option>
         {teachers && teachers?.map((teacher)=>
-        <option value={teacher.teacher_name}>{teacher.teacher_name}</option>
+        <option value={teacher.teacher_id}>{teacher.teacher_name}</option>
         )}
         </select>
                 <div class="timetable-img text-center">
@@ -244,12 +240,17 @@ console.log(day)
                             {Array.from({ length: 7 }, (_, index) => (
                                   <>
                                   <td>
-                                  <select className='form-control form-control-lg' onChange={e=>handleChange(e,index,monday,timeArr[index],"Monday")} key={index}>
-        <option>--select teacher--</option>
-        {teachers && teachers?.map((teacher)=>
-        <option value={teacher.teacher_name}>{teacher.teacher_name}</option>
-        )}
-        </select>
+                                  <select
+  className='form-control form-control-lg'
+  onChange={e => handleChange(e, index, monday, timeArr[index], "Monday")}
+  key={index}
+>
+  <option value='-'>--select teacher--</option>
+  {teachers && teachers.map((teacher, teacherIndex) =>
+    <option key={teacherIndex} value={teacher.teacher_name}>{teacher.teacher_name}</option>
+  )}
+</select>
+
                                   {/* <input placeholder={''}  key={index} onChange={e=>handleChange(e,index,monday,timeArr[index])}/> */}
                                   </td>           
                           </>

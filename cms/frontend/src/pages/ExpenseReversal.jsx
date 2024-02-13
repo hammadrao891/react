@@ -14,19 +14,24 @@ const ExpenseReversal = () =>{
     const [name,setName] = useState()
     const [form,setForm] = useState(false)
     const navigate = useNavigate()
-    const [expenseReverse,setExpenseReverse] = useState(false)
+    const [expenseReverse,setExpenseReverse] = useState(null)
+    const [noRecord,setNoRecord] = useState(false)
+  
     const fetchExpenses=async()=>{
-
+      
         try
         {
+          
             const response = await axios({
                 method:"get",
             baseURL:"http://localhost:8000/api/",
             url:`/expense/expenses/${expenseId}`,
             })
-            setForm(true)
-            console.log(response.data[0]) 
-            setDetails(response.data[0])
+            if(response.data[0] !== undefined){
+              setForm(true)
+              
+              console.log(response.data[0]) 
+              setDetails(response.data[0])
              try{
               const response = await axios({
                 method:"get",
@@ -37,7 +42,13 @@ const ExpenseReversal = () =>{
               setExpenseReverse(response.data.exists)
               console.log(response.data)
             }
-             catch{} 
+             catch{} }
+             else 
+             {
+              if(!expenseReverse)
+              setNoRecord(true)
+             }
+             
         }
         catch{
             console.log("err")
@@ -113,7 +124,7 @@ const ExpenseReversal = () =>{
               Submit
             </button>
             </div>
-            {form && <>
+            {form &&   <>
                 
                 <table className="table">
           <tbody>
@@ -150,7 +161,7 @@ const ExpenseReversal = () =>{
          </tbody>
          </table>{
 
-          expenseReverse ? <h3>Expense already Reversed</h3> :
+          expenseReverse ? <h3>Expense already Reversed</h3> : details.expense_type_id === 14 ? <h3>Staff Loan can only be retruned</h3> :
          <div className="--my">
             <button
             onClick={reverseExpense}
@@ -160,8 +171,12 @@ const ExpenseReversal = () =>{
               Reverse Expense
             </button>
             </div>}
-     
+          
             </>}
+            {
+              noRecord && expenseReverse===null &&
+              <h3>No Record Found</h3>
+            }
             </Card>
             </div>
         </>

@@ -136,7 +136,7 @@ console.log(updatedClassess)
           url:`timeTable/classes/${e.target.value}`
         }
       )
-      if(response.data.classes.Monday)
+      if(response.data.classes)
       {
         setClasses(response.data.classes)
         console.log(response.data)
@@ -164,6 +164,7 @@ console.log(updatedClassess)
       setClassTeacher(e.target.value)
     
     }
+    const times = ['7:00','7:40','8:20','9:00','10:00','10:40','11:20']
   return (
     <div className="timetable-container">
      <ToastContainer/>

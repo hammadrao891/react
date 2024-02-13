@@ -206,12 +206,12 @@ router.get('/class-occurrences', (req, res) => {
       return res.json({ classOccurrences });
   });
 });
-router.get('/checkClassTeacher/:teacherName', (req, res) => {
-  const teacherName = req.params.teacherName;
+router.get('/checkClassTeacher/:teacherId', (req, res) => {
+  const teacherId = req.params.teacherId;
 
   // Execute a SQL query to check if the class_teacher exists
   const sql = 'SELECT * FROM classes WHERE class_teacher = ? ';
-  db.query(sql, [teacherName], (err, results) => {
+  db.query(sql, [teacherId], (err, results) => {
     if (err) {
       console.error('Database query error:', err);
       res.status(500).json({ error: 'Internal Server Error' });
