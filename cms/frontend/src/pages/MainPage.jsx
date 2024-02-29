@@ -20,45 +20,37 @@ const MainPage = () => {
   const [feeHistory,setFeeHistory] = useState();
   const navigate = useNavigate()
   const[paidAmount,setPaidAmount] = useState()
-  const[fine,setFine] = useState()
+  const[fine,setFine] = useState(0)
   
 
-useEffect(()=>{
-const fetchStudent=async()=>{
-
-    try
-    {
-        const response = await axios({
-            method:"get",
-        baseURL:"http://localhost:8000/api/",
-        url:`/fee/getStudents`,
-        })
-        console.log(response) 
-        setDetails(response.data)
-    }
-    catch{
-        console.log("err")
-    }
-
-}
-fetchStudent();
-},[])
 
 const updateFee=async()=>{
-
+const totalAmountDue = (feeHistory.totalAmountDue + fine) - paidAmount
+console.log( {
+  feeMonth:feeHistory.feeMonth,
+  paymentStatus:totalAmountDue === 0 ? "paid" : "not paid",
+  paidAmount:paidAmount,
+  fine:fine,
+  totalAmountDue:totalAmountDue
+ })
     try
     {
-        const response = await axios({
+      console.log("sss")
+         await axios({
             method:"put",
-        baseURL:"http://localhost:8000/api/",
-        url:`/fee/update-previous-due/${regNum}`,
-        data:{previousDue}
+        baseURL:"http://localhost:8000/api",
+        url:`/fee/collect-fee/${regNum}`,
+        data:
+        {
+        feeMonth:feeHistory.feeMonth,
+        paymentStatus:totalAmountDue === 0 ? "paid" : "not paid",
+        paidAmount:paidAmount,
+        fine:fine,
+        totalAmountDue:totalAmountDue
+       }
         })
-        toast.success("Previous Due Updated Successfully!")
-        setTimeout(() => {
-            
-            navigate(`/fee-collection-and-modification`);
-          }, 2000);
+        toast.success("Fee Collected Successfully!")
+        console.log("sssdaw")
 
     }
     catch{
@@ -105,7 +97,7 @@ const epxenseData = {
         const response = await axios({
             method:"get",
         baseURL:"http://localhost:8000/api/",
-        url:`/fee/student-fee-history/${regNum}`,
+        url:`/fee/last-fee/${regNum}`,
         })
         console.log(response.data)
         setFeeHistory(response.data)
@@ -121,8 +113,7 @@ const epxenseData = {
           url:`/fee/student-details-previousDue/${regNum}`,
           })
           setTable(true)
-          console.log(response.data) 
-          setDetails(response.data)
+          
        
       
       }
@@ -136,6 +127,7 @@ const epxenseData = {
     
   return (
     <div className="" style={{display:"grid",gap:"2em"}}>
+    <ToastContainer/>
     <div style={{display:"flex"}}>
      <NewCard {...studentsData} />
      <NewCard {...paidData} />
@@ -204,21 +196,24 @@ const epxenseData = {
           <tbody>
           <tr>
             <td>Student Name</td>
-            <td>{details.name}</td>
+            <td>{feeHistory.name}</td>
             <td>Student Registration No.</td>
-            <td>{details.regNum}</td>
+            <td>{feeHistory.regNum}</td>
             <td>Total Amount Due</td>
-            <td>{details.totalAmountDue}</td>
+            <td>{feeHistory.totalAmountDue}</td>
             
           </tr>
           <tr>
             <td>Father Name</td>
-            <td>{details.fName}</td>
+            <td>{feeHistory.fName}</td>
             <td>Class</td>
-            <td>{details.classs}</td>
+            <td>{feeHistory.classs}</td>
           </tr>
 </tbody>
 </table>
+{feeHistory.paymentStatus === "paid" ? 
+<h3>Fee Collected Already</h3>
+:
  <div className="--my">
         <h4>Paid Amount</h4>
         <input type="number" onChange={(e)=>{setPaidAmount(e.target.value)}}/>
@@ -227,49 +222,11 @@ const epxenseData = {
         <button   className="--btn --btn-success" onClick={updateFee} style={{marginTop:"1em"}}>Collect</button>
         
         </div>
-
+}
 </>}
 
      </Card>
     </div>
   );
 };
-
-MainPage.modules = {
-  toolbar: [
-    [{ header: "1" }, { header: "2" }, { font: [] }],
-    [{ size: [] }],
-    ["bold", "italic", "underline", "strike", "blockquote"],
-    [{ align: [] }],
-    [{ color: [] }, { background: [] }],
-    [
-      { list: "ordered" },
-      { list: "bullet" },
-      { indent: "-1" },
-      { indent: "+1" },
-    ],
-    ["clean"],
-  ],
-};
-MainPage.formats = [
-  "header",
-  "font",
-  "size",
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "blockquote",
-  "color",
-  "background",
-  "list",
-  "bullet",
-  "indent",
-  "link",
-  "video",
-  "image",
-  "code-block",
-  "align",
-];
-
 export default MainPage;

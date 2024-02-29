@@ -34,43 +34,52 @@ const TimeTable = () => {
   fetchClasses();
   },[classDetails])
 
-const fetchTimetable=async()=>{
+const fetchTimetable=async(e)=>{
+  setClasses(e)
   try
   {
     const response=await axios(
     {
       method:"get",
       baseURL:'http://localhost:8000/api/',
-      url:`/timeTable/classes/${classs}`,
+      url:`/timeTable/classes/${e}`,
     }
   )
-setClasses(response.data.classes)
-setToggle(true)
+  if (response.data.classes.Monday) {
+    setClasses(response.data.classes)
+    console.log(response.data)
+    setToggle(true)
+  }
+  else {
+    alert("Class Timetable Not Found!")
+    setToggle(false)
+  }
 } catch{}
 }
 const times = ['7:00','7:40','8:20','9:00','10:00','10:40','11:20']
   return (
     <div className="" >
-      <div style={{display:"flex",justifyContent:"space-between"}}><h1 className='text-center'>Timetables</h1>
-      <div style={{display:"flex",justifyContent:"space-between"}}>
+      <div style={{display:"flex",justifyContent:"flex-end"}}>
       <button   onClick={ ()=>navigate("/update-timetable")} className="--btn --btn-success">Update TimeTable</button>
       <button   onClick={ ()=>navigate("/create-timetable")} className="--btn --btn-success">Create TimeTable</button>
       <button  onClick={ ()=>navigate("/add-teacher")} className="--btn --btn-success">Add Teacher</button>
       </div>
-      </div>
- <div class="" style={{width:"100%"}}  >
-    <h3>Class Teacher: {}</h3>
-  <label style={{color:"black",fontSize:"large"}}>Select Class:</label>
-        <select style={{fontSize:"small"}} onChange={e=>setClasss(e.target.value)} name="classs" >
-        <option>--select class--</option>
-           {
-            classDetails?.map((m)=>
-            <option value={m.class_id}>{m.class_name}</option>
-            )
-           } 
-        </select>
-        <button className='--btn --btn-small' onClick={fetchTimetable}>Get TimeTable</button>
-     
+ <div className="timetable-container">
+        <div class="timetable-img text-center">
+          <h2>Class TimeTable</h2>
+          <label style={{ color: "black", fontSize: "small" }}>Select Class:</label>
+          <select className='form-control form-control-lg'  style={{marginBottom:"1%"}} onChange={e=>fetchTimetable(e.target.value)} name="classs" >
+            <option>--select class--</option>
+            {
+              classDetails?.map((m) =>
+                <option value={m.class_id}>{m.class_name}</option>
+              )
+            }
+
+          </select>
+        {/* <button className='--btn --btn-small' onClick={fetchTimetable}>Get TimeTable</button>  */}
+
+        </div>    
            {
             toggle && <>
           <div class="table-responsive" style={{display:"flex",justifyContent:"center"}}>

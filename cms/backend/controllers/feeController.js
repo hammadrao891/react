@@ -38,7 +38,7 @@ const feeCollectionReport =asyncHandler( (req, res) => {
     JOIN students ON fee.regNum = students.regNum
   `;
 
-  // Use the connection db to execute the query
+  // Use the db db to execute the query
   db.query(query, (error, results) => {
     if (error) {
       console.error('Error executing query:', error);
@@ -232,13 +232,40 @@ const ModifyPreviousDues = asyncHandler((req, res) => {
   });
 });
 
-
-const collectFee = asyncHandler((req, res) => {
+const getStudentFeeDetails =asyncHandler (async (req, res) => {
   const regNum = req.params.regNum;
-const { feeMonth, paymentStatus, previousDue, totalAmountDue, paidAmount } = req.body;
 
-const sql = 'INSERT INTO fee (regNum, feeMonth, paymentStatus, previousDue, totalAmountDue, paidAmount) VALUES (?, ?, ?, ?, ?, ?)';
-const values = [regNum, feeMonth, paymentStatus, previousDue, totalAmountDue, paidAmount];
+  // SQL query to fetch the last record
+  const sql = `
+  SELECT f.*, s.*
+  FROM fee f
+  JOIN students s ON f.regNum = s.regNum
+  WHERE f.regNum = ?
+  ORDER BY f.feeId DESC
+  LIMIT 1
+;`;
+
+  // Execute the query
+  db.query(sql, [regNum], (err, result) => {
+    if (err) {
+      console.error('Error fetching last fee record:', err);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+
+    if (result.length === 0) {
+      return res.status(404).json({ message: 'No fee record found' });
+    }
+
+    return res.json(result[0]); // Return the first (and only) row
+  });
+});
+const collectFee = asyncHandler((req, res) => {
+  console.log("sss")
+  const regNum = req.params.regNum;
+const { feeMonth, paymentStatus,  totalAmountDue, paidAmount,fine } = req.body;
+
+const sql = `UPDATE fee SET paymentStatus = ?,paidAmount = ? , fine = ? and totalAmountDue=? WHERE regNum = ? and feeMonth=?`;
+const values = [paymentStatus, paidAmount,fine,totalAmountDue ,regNum, feeMonth ];
 
 db.query(sql, values, (updateErr, updateResult) => {
   if (updateErr) {
@@ -249,7 +276,7 @@ db.query(sql, values, (updateErr, updateResult) => {
   if (updateResult.affectedRows === 0) {
     return res.status(404).json({ error: 'Student not found' });
   }
-
+console.log("hyg")
   res.json({ message: 'Fee details inserted successfully' });
 });
 
@@ -264,5 +291,5 @@ getFeeDetailsP,
 ModifyPreviousDues,
 collectFee,
 getFeeDetailsFeeHistory,
-getStudents
+getStudents,getStudentFeeDetails
 }
