@@ -33,9 +33,10 @@ console.log( {
   fine:fine,
   totalAmountDue:totalAmountDue
  })
+
     try
     {
-      console.log("sss")
+      // console.log("sss")
          await axios({
             method:"put",
         baseURL:"http://localhost:8000/api",
@@ -43,10 +44,10 @@ console.log( {
         data:
         {
         feeMonth:feeHistory.feeMonth,
-        paymentStatus:totalAmountDue === 0 ? "paid" : "not paid",
+        paymentStatus:totalAmountDue === 0 ? "Fully Paid" : totalAmountDue === feeHistory.totalAmountDue ? "Not Paid" : totalAmountDue < 0 ? "Advance Paid" : "Partially Paid",
         paidAmount:paidAmount,
         fine:fine,
-        totalAmountDue:totalAmountDue
+        totalAmountDue
        }
         })
         toast.success("Fee Collected Successfully!")

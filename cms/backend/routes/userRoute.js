@@ -3,19 +3,11 @@ const router = express.Router();
 const {
   registerUser,
   getUsers,
-  unpaid,
   markAttendance,
   checkAttendance,
-  payFee,
-  getFeeDetails,
-  overallFeeDetails,
-  generateChallan,
-  downloadChallan,
-  generateAllChallans,
   getCLassStudent,
   checkClassAttendance,
   getStudentByRegNum,
-  getPaidStudents,
   updateStudent,
   updateStudentClass,
   updateWholeClass,
@@ -23,30 +15,21 @@ const {
   UpdateAdmissionDate,
   terminateStudent,
 } = require("../controllers/userController");
-// const protect = require("../middleWare/authMiddleware");
-// const User = require("../models/userModel")
+const asyncHandler = require("express-async-handler")
 
 
-router.post("/register", registerUser);
-router.get("/",getUsers)
-router.post("/markAttendance",markAttendance)
-router.get("/unpaid",unpaid)
-router.get("/checkAttendance/:date",checkAttendance)
-router.post("/payFee",payFee)
-router.get("/getFeeDetails/:studentId/:month/:year",getFeeDetails)
-router.get("/overallFeeDetails/:studentId",overallFeeDetails)
-router.post("/generateFeeChallan/",generateChallan)
-router.post("/downloadChallan/:filename",downloadChallan)
-router.post("/downloadChallanForAll/",generateAllChallans)
-router.get("/getClassStudents/:classs",getCLassStudent)
-router.get("/checkClassAttendance/:classs/:startDate/:endDate",checkClassAttendance)
-router.get("/getStudentByRegNum/:regNum",getStudentByRegNum)
-router.get("/getPaidStudents",getPaidStudents)
-router.put('/students/:regNum', updateStudent)
-router.put('/updateClass/:regNum/:classs',updateStudentClass)
-router.put('/update-class/:classs',updateWholeClass)
-router.put('/updateDob/:regNum',updateDOB)
-router.put('/updateAdmissionDate/:regNum',UpdateAdmissionDate)
-router.delete('/terminateStudent/:regNum',terminateStudent)
+router.post("/register",asyncHandler( registerUser));
+router.get("/",asyncHandler(getUsers))
+router.post("/markAttendance",asyncHandler(markAttendance))
+router.get("/checkAttendance/:date",asyncHandler(checkAttendance))
+router.get("/getClassStudents/:classs",asyncHandler(getCLassStudent))
+router.get("/checkClassAttendance/:classs/:startDate/:endDate",asyncHandler(checkClassAttendance))
+router.get("/getStudentByRegNum/:regNum",asyncHandler(getStudentByRegNum))
+router.put('/students/:regNum',asyncHandler( updateStudent))
+router.put('/updateClass/:regNum/:classs',asyncHandler(updateStudentClass))
+router.put('/update-class/:classs',asyncHandler(updateWholeClass))
+router.put('/updateDob/:regNum',asyncHandler(updateDOB))
+router.put('/updateAdmissionDate/:regNum',asyncHandler(UpdateAdmissionDate))
+router.delete('/terminateStudent/:regNum',asyncHandler(terminateStudent))
 
 module.exports = router;

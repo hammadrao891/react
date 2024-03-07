@@ -24,7 +24,7 @@ const GenerateFeeAdmin = () => {
             const response = await axios({
                 method:"post",
             baseURL:"http://localhost:8000/api/",
-            url:`users/generateFeeChallan/`,
+            url:`fee/generateFeeChallan/`,
             data
             })
             console.log(response) 
