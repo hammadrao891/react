@@ -1,10 +1,11 @@
-import rateLimit from 'express-rate-limit';
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
-import db from '../db.js';
-import { logAction } from './logger.js';
+const rateLimit = require('express-rate-limit');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const db = require('../db.js');
+const { logAction } = require('./logger.js');
 
-export const register = async (req, res) => {
+
+ const register = async (req, res) => {
   try {
     console.log(req.body);
     const { name, email, password, role, createdBy } = req.body;
@@ -140,9 +141,9 @@ const login = async (req, res) => {
   }
 };
 
-export { login, loginRateLimiter };
+// export { login, loginRateLimiter };
 
-export const getAllUsers = async (req, res) => {
+ const getAllUsers = async (req, res) => {
   try {
     const users = await new Promise((resolve, reject) => {
       db.query('SELECT * FROM users', (error, results) => {
@@ -161,7 +162,7 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
-export const deleteUser = async (req, res) => {
+ const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -184,7 +185,7 @@ export const deleteUser = async (req, res) => {
   }
 };
 
-export const updateUserActiveStatus = async (req, res) => {
+ const updateUserActiveStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { is_active } = req.body;
@@ -211,7 +212,7 @@ export const updateUserActiveStatus = async (req, res) => {
 };
 
 // In your controller file
-export const getLogs = async (req, res) => {
+ const getLogs = async (req, res) => {
   try {
     const logs = await new Promise((resolve, reject) => {
       db.query(
@@ -232,3 +233,5 @@ export const getLogs = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+module.exports = {getAllUsers,getLogs,updateUserActiveStatus,deleteUser,login,loginRateLimiter,register}

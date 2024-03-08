@@ -1,4 +1,4 @@
-import {
+const  {
   getAllUsers,
   login,
   register,
@@ -6,9 +6,9 @@ import {
   updateUserActiveStatus,
   loginRateLimiter,
   getLogs,
-} from '../controllers/authController.js';
+} = require('../controllers/authController.js');
 
-import express from 'express';
+const express = require ('express');
 
 const router = express.Router();
 
@@ -19,4 +19,4 @@ router.get('/users', getAllUsers);
 router.delete('/users/:id', deleteUser);
 router.patch('/users/:id', updateUserActiveStatus);
 
-export default router;
+module.exports =  router;
